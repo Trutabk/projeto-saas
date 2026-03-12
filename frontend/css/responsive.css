@@ -1,0 +1,172 @@
+/* Responsividade */
+
+@media (max-width: 1024px) {
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem;
+  }
+
+  /* Menu mobile com fundo escuro e efeitos modernos */
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: rgba(10, 10, 20, 0.95);
+    backdrop-filter: blur(15px);
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .nav-links li {
+    margin: 0.8rem 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 0.8rem 1.5rem;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+  }
+
+  .nav-links a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .nav-links a:hover::before {
+    left: 100%;
+  }
+
+  /* Botões especiais (Dashboard e Login) */
+  .nav-links .btn-dashboard,
+  .nav-links .btn-login {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    color: white;
+    font-weight: 600;
+    margin: 0.5rem 0;
+  }
+
+  .nav-links .btn-dashboard:hover,
+  .nav-links .btn-login:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  /* Ajuste para o ícone do hambúrguer */
+  .hamburger {
+    display: block;
+    cursor: pointer;
+    font-size: 1.8rem;
+    color: var(--dark);
+    transition: color 0.3s;
+  }
+
+  .hamburger:hover {
+    color: var(--primary);
+  }
+
+  /* Ajustes de layout para seções */
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  .hero-image img {
+    max-width: 80%;
+  }
+  .plan-cards {
+    grid-template-columns: 1fr;
+  }
+  .chat-container {
+    height: calc(100vh - 60px);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  .btn-cta {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+  .modal-content {
+    padding: 1rem;
+  }
+}
+
+/* ===== Melhorias adicionais (não removem nada do original) ===== */
+
+/* Ajuste para telas muito grandes (desktop widescreen) */
+@media (min-width: 1440px) {
+  .hero-content h1 {
+    font-size: 4rem;
+  }
+  .hero-content p {
+    font-size: 1.3rem;
+  }
+  .btn-cta {
+    font-size: 1.3rem;
+    padding: 1.2rem 2.5rem;
+  }
+}
+
+/* Garantia de que a navbar não fique estranha em telas intermediárias */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .nav-links {
+    gap: 1rem;
+  }
+  .nav-links a {
+    font-size: 1rem;
+  }
+}

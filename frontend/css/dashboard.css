@@ -1,0 +1,419 @@
+/* ===== dashboard.css – Estilos exclusivos do dashboard ===== */
+
+:root {
+    --primary: #6c5ce7;
+    --secondary: #a29bfe;
+    --success: #00b894;
+    --warning: #fdcb6e;
+    --danger: #d63031;
+    --dark: #1e1e2f;
+    --darker: #0a0a1a;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--darker);
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* Navbar com efeito vidro */
+.navbar {
+    background: rgba(10, 10, 20, 0.8);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.navbar .logo {
+    background: linear-gradient(135deg, #fff, #a5b1ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Dashboard principal */
+.dashboard {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cabeçalho do dashboard */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff, #a5b1ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dashboard-header .user-greeting {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.7);
+}
+
+.dashboard-header .user-greeting span {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* Cards de estatísticas */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 1.5rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--primary), var(--secondary), var(--primary));
+    border-radius: 26px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.card:hover::before {
+    opacity: 0.3;
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.card-icon i {
+    font-size: 2rem;
+    color: white;
+}
+
+.card h3 {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.card p {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(135deg, #fff, #a5b1ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* CORREÇÃO: bloco .plan-status estava dentro de .card p, agora está correto */
+.plan-status {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.plan-status .warning {
+    color: var(--warning);
+    background: rgba(253, 203, 110, 0.1);
+    padding: 0.3rem 1rem;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.plan-status .success {
+    color: var(--success);
+    background: rgba(0, 184, 148, 0.1);
+    padding: 0.3rem 1rem;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Seção do histórico */
+.transactions-section {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+}
+
+.transactions-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.transactions-section h2 i {
+    color: var(--primary);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 1rem;
+    color: rgba(255,255,255,0.7);
+    font-weight: 600;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.status-paid {
+    color: var(--success);
+    background: rgba(0, 184, 148, 0.1);
+    padding: 0.2rem 0.8rem;
+    border-radius: 50px;
+    display: inline-block;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: var(--warning);
+    background: rgba(253, 203, 110, 0.1);
+    padding: 0.2rem 0.8rem;
+    border-radius: 50px;
+    display: inline-block;
+    font-weight: 600;
+}
+
+/* Gráfico simples (decorativo) */
+.mini-chart {
+    margin-top: 2rem;
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.mini-chart .bar {
+    flex: 1;
+    background: linear-gradient(to top, var(--primary), var(--secondary));
+    border-radius: 8px 8px 0 0;
+    transition: height 0.3s;
+    animation: growBar 1.5s ease-out;
+}
+
+@keyframes growBar {
+    from { height: 0; }
+    to { height: var(--height); }
+}
+
+.mini-chart .bar:nth-child(1) { height: 40px; animation-delay: 0.1s; }
+.mini-chart .bar:nth-child(2) { height: 70px; animation-delay: 0.2s; }
+.mini-chart .bar:nth-child(3) { height: 55px; animation-delay: 0.3s; }
+.mini-chart .bar:nth-child(4) { height: 90px; animation-delay: 0.4s; }
+.mini-chart .bar:nth-child(5) { height: 65px; animation-delay: 0.5s; }
+.mini-chart .bar:nth-child(6) { height: 80px; animation-delay: 0.6s; }
+
+/* ===== Melhorias para o dashboard ultra profissional ===== */
+
+/* Grid para gráfico e atividades */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.chart-card, .activity-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 1.5rem;
+    transition: transform 0.3s;
+}
+
+.chart-card:hover, .activity-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.chart-card h3, .activity-card h3 {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.chart-card canvas {
+    width: 100%;
+    height: 200px;
+}
+
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.activity-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.8);
+    font-size: 0.95rem;
+}
+
+.activity-list li:last-child {
+    border-bottom: none;
+}
+
+.activity-list li i {
+    font-size: 0.5rem;
+    color: var(--primary);
+}
+
+/* Animação de contagem nos cards */
+.card p {
+    transition: all 0.3s;
+}
+
+/* Ajuste para o mini-chart */
+.mini-chart {
+    margin: 2rem 0;
+}
+
+/* ===== Responsividade aprimorada ===== */
+@media (max-width: 1024px) {
+    .dashboard {
+        padding: 0 1.5rem;
+    }
+    .dashboard-header h1 {
+        font-size: 2.2rem;
+    }
+    .dashboard-header .user-greeting {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        padding: 0 1rem;
+    }
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .dashboard-header h1 {
+        font-size: 2rem;
+    }
+    .cards {
+        grid-template-columns: 1fr;
+    }
+    .card p {
+        font-size: 2rem;
+    }
+    .card-icon {
+        width: 50px;
+        height: 50px;
+    }
+    .card-icon i {
+        font-size: 1.5rem;
+    }
+    .transactions-section {
+        padding: 1.5rem;
+    }
+    .transactions-section h2 {
+        font-size: 1.5rem;
+    }
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    .chart-card canvas {
+        height: 180px;
+    }
+    .mini-chart {
+        height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-header h1 {
+        font-size: 1.8rem;
+    }
+    .card h3 {
+        font-size: 1rem;
+    }
+    .card p {
+        font-size: 1.8rem;
+    }
+    .mini-chart .bar:nth-child(1) { height: 30px; }
+    .mini-chart .bar:nth-child(2) { height: 50px; }
+    .mini-chart .bar:nth-child(3) { height: 40px; }
+    .mini-chart .bar:nth-child(4) { height: 65px; }
+    .mini-chart .bar:nth-child(5) { height: 48px; }
+    .mini-chart .bar:nth-child(6) { height: 58px; }
+}
+
+/* Ajuste para telas muito grandes */
+@media (min-width: 1600px) {
+    .dashboard {
+        max-width: 1600px;
+    }
+}

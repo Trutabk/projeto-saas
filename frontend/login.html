@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SaaS AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Efeitos extras de última geração (vamos colocar no auth.css, mas por enquanto inline para visualização imediata) -->
+    <style>
+        /* ===== EFEITOS ULTRA MODERNOS ===== */
+        /* Fundo com partículas animadas via JS (será adicionado depois) */
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        /* Efeito de brilho nos inputs ao passar o mouse */
+        .input-group.glowing input {
+            animation: glowPulse 2s infinite;
+        }
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 5px rgba(165, 177, 255, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(165, 177, 255, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(165, 177, 255, 0.5); }
+        }
+        /* Botão com efeito magnético */
+        .btn-magnetic {
+            transition: transform 0.2s;
+        }
+        /* Efeito de ondas no botão */
+        .ripple-button {
+            position: relative;
+            overflow: hidden;
+        }
+        .ripple-button .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s ease-out;
+            pointer-events: none;
+        }
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        /* Ícones flutuantes decorativos */
+        .floating-icon {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.2);
+            z-index: 1;
+            animation: floatIcon 10s linear infinite;
+        }
+        @keyframes floatIcon {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        /* Título com brilho pulsante */
+        .glowing-title {
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(165, 177, 255, 0.5); }
+            50% { text-shadow: 0 0 40px rgba(165, 177, 255, 0.9); }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Canvas para partículas interativas -->
+        <canvas id="particle-canvas"></canvas>
+
+        <!-- Ícones flutuantes decorativos -->
+        <i class="fas fa-code floating-icon" style="top: 10%; left: 5%; animation-duration: 15s;"></i>
+        <i class="fas fa-robot floating-icon" style="top: 30%; left: 80%; animation-duration: 20s;"></i>
+        <i class="fas fa-brain floating-icon" style="top: 60%; left: 15%; animation-duration: 18s;"></i>
+        <i class="fas fa-cloud-upload-alt floating-icon" style="top: 80%; left: 70%; animation-duration: 22s;"></i>
+
+        <!-- Partículas fixas (do CSS anterior) -->
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+
+        <form id="loginForm">
+            <h2 class="glowing-title">✨ Bem-vindo de volta</h2>
+            <p class="subtitle typing-demo">Acesse sua conta e continue evoluindo</p>
+            
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" placeholder="Seu melhor e-mail" required autofocus>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Sua senha secreta" required>
+            </div>
+            
+            <button type="submit" class="ripple-button btn-magnetic" id="loginBtn">
+                <span>Entrar no universo IA</span>
+                <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
+            </button>
+            
+            <div class="benefits">
+                <span><i class="fas fa-shield-alt"></i> Criptografia total</span>
+                <span><i class="fas fa-infinity"></i> Ilimitado</span>
+                <span><i class="fas fa-brain"></i> IA generativa</span>
+            </div>
+            
+            <p class="auth-links">
+                <a href="register.html">Criar nova conta</a> • 
+                <a href="forgot-password.html">Esqueceu a senha?</a>
+            </p>
+        </form>
+    </div>
+
+    <script type="module" src="js/api.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script>
+        // ===== EFEITOS INTERATIVOS =====
+
+        // 1. Partículas no canvas (seguindo o mouse)
+        (function() {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            const PARTICLE_COUNT = 80;
+
+            function initCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                createParticles();
+            }
+
+            function createParticles() {
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        radius: Math.random() * 3 + 1,
+                        speedX: (Math.random() - 0.5) * 0.5,
+                        speedY: (Math.random() - 0.5) * 0.5,
+                        color: `rgba(255, 255, 255, ${Math.random() * 0.3 + 0.2})`
+                    });
+                }
+            }
+
+            function drawParticles() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    // Movimento
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    // Rebater nas bordas
+                    if (p.x < 0 || p.x > width) p.speedX *= -1;
+                    if (p.y < 0 || p.y > height) p.speedY *= -1;
+                });
+                requestAnimationFrame(drawParticles);
+            }
+
+            // Interação com o mouse: partículas se afastam
+            let mouse = { x: 0, y: 0 };
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            function updateParticles() {
+                particles.forEach(p => {
+                    let dx = p.x - mouse.x;
+                    let dy = p.y - mouse.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        let angle = Math.atan2(dy, dx);
+                        let force = (100 - distance) / 1000;
+                        p.x += Math.cos(angle) * force * 10;
+                        p.y += Math.sin(angle) * force * 10;
+                    }
+                });
+                requestAnimationFrame(updateParticles);
+            }
+
+            initCanvas();
+            drawParticles();
+            updateParticles();
+
+            window.addEventListener('resize', () => {
+                initCanvas();
+            });
+        })();
+
+        // 2. Efeito de brilho nos inputs ao focar
+        document.querySelectorAll('.input-group input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.closest('.input-group').classList.add('glowing');
+            });
+            input.addEventListener('blur', () => {
+                input.closest('.input-group').classList.remove('glowing');
+            });
+        });
+
+        // 3. Efeito magnético no botão (opcional)
+        const btn = document.getElementById('loginBtn');
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = '';
+        });
+
+        // 4. Efeito ripple no clique do botão
+        btn.addEventListener('click', function(e) {
+            const rect = btn.getBoundingClientRect();
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.left = e.clientX - rect.left + 'px';
+            ripple.style.top = e.clientY - rect.top + 'px';
+            ripple.style.width = ripple.style.height = Math.max(rect.width, rect.height) + 'px';
+            btn.appendChild(ripple);
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+
+        // 5. Remover a classe typing-demo após a animação
+        document.addEventListener('DOMContentLoaded', () => {
+            const subtitle = document.querySelector('.subtitle');
+            if (subtitle) {
+                subtitle.addEventListener('animationend', () => {
+                    subtitle.classList.remove('typing-demo');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

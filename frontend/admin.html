@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - SaaS AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Admin SaaS</div>
+        <ul class="nav-links">
+            <li><a href="#stats">Estatísticas</a></li>
+            <li><a href="#users">Usuários</a></li>
+            <li><a href="#transactions">Transações</a></li>
+            <li><a href="#" id="logoutBtn">Sair</a></li>
+        </ul>
+        <div class="hamburger">☰</div>
+    </nav>
+
+    <main class="admin">
+        <h1>Painel Administrativo</h1>
+
+        <section id="stats">
+            <h2>Visão Geral</h2>
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <h3>Usuários</h3>
+                    <p id="totalUsers">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Transações</h3>
+                    <p id="totalTransactions">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Receita Total</h3>
+                    <p id="totalRevenue">R$ 0,00</p>
+                </div>
+            </div>
+            <canvas id="revenueChart" width="400" height="200"></canvas>
+        </section>
+
+        <section id="users">
+            <h2>Usuários</h2>
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Plano</th>
+                        <th>Data Cadastro</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div class="pagination">
+                <button id="prevUsers">Anterior</button>
+                <span id="pageUsers">1</span>
+                <button id="nextUsers">Próximo</button>
+            </div>
+        </section>
+
+        <section id="transactions">
+            <h2>Transações Recentes</h2>
+            <table id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Plano</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </main>
+
+    <script type="module" src="js/api.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>

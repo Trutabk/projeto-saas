@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos - SaaS AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/plans.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">SaaS AI</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="planos.html" class="active">Planos</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="chat.html">Chat</a></li>
+        </ul>
+        <div class="hamburger">☰</div>
+    </nav>
+
+    <main class="plans-page">
+        <div class="container">
+            <h1 class="section-title">Escolha o <span class="gradient-text">plano ideal</span> para você</h1>
+            <div class="plan-cards">
+                <!-- Card Bronze -->
+                <div class="plan-card">
+                    <h3>Bronze</h3>
+                    <p class="price"><span class="currency">R$</span> 29,90 <span class="period">/mês</span></p>
+                    <ul class="features">
+                        <li><i class="fas fa-check-circle"></i> Chat básico</li>
+                        <li><i class="fas fa-check-circle"></i> Upload de imagens</li>
+                        <li class="disabled"><i class="fas fa-times-circle"></i> Histórico ilimitado</li>
+                        <li class="disabled"><i class="fas fa-times-circle"></i> Suporte prioritário</li>
+                    </ul>
+                    <button class="btn-plan" data-plan="bronze">Assinar</button>
+                </div>
+
+                <!-- Card Prata (mais popular) -->
+                <div class="plan-card popular">
+                    <div class="popular-badge">Mais Popular</div>
+                    <h3>Prata</h3>
+                    <p class="price"><span class="currency">R$</span> 59,90 <span class="period">/mês</span></p>
+                    <ul class="features">
+                        <li><i class="fas fa-check-circle"></i> Chat avançado</li>
+                        <li><i class="fas fa-check-circle"></i> Upload de arquivos</li>
+                        <li><i class="fas fa-check-circle"></i> Histórico completo</li>
+                        <li class="disabled"><i class="fas fa-times-circle"></i> Suporte prioritário</li>
+                    </ul>
+                    <button class="btn-plan" data-plan="prata">Assinar</button>
+                </div>
+
+                <!-- Card Ouro -->
+                <div class="plan-card">
+                    <h3>Ouro</h3>
+                    <p class="price"><span class="currency">R$</span> 99,90 <span class="period">/mês</span></p>
+                    <ul class="features">
+                        <li><i class="fas fa-check-circle"></i> Chat com IA multimodal</li>
+                        <li><i class="fas fa-check-circle"></i> Upload de qualquer arquivo</li>
+                        <li><i class="fas fa-check-circle"></i> Histórico completo</li>
+                        <li><i class="fas fa-check-circle"></i> Suporte prioritário</li>
+                    </ul>
+                    <button class="btn-plan" data-plan="ouro">Assinar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Pix -->
+    <div id="pix-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Pagamento via Pix</h3>
+            <div id="qr-code"></div>
+            <p id="copy-paste"></p>
+            <p id="payment-status">Aguardando pagamento...</p>
+        </div>
+    </div>
+
+    <script type="module" src="js/api.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/payment.js"></script>
+    <script>
+        if (!localStorage.getItem('token')) window.location.href = 'login.html';
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
+                navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')));
+            }
+        });
+    </script>
+</body>
+</html>

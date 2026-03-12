@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termos de Uso | SaaS AI</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Garantia de fundo escuro e texto claro */
+        body {
+            background: #0a0a1a !important;
+            color: #fff !important;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .legal-page {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 2.5rem;
+            background: rgba(20,20,40,0.95) !important;
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            color: #fff !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .legal-page::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(108,92,231,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+            z-index: 0;
+        }
+
+        .legal-page > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .legal-page h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .legal-page h1 i {
+            font-size: 3rem;
+            color: #a5b1ff;
+        }
+
+        .legal-page .last-updated {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legal-page h2 {
+            font-size: 1.8rem;
+            margin: 2.5rem 0 1rem;
+            color: #a5b1ff !important;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legal-page h2 i {
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        .legal-page p, .legal-page li {
+            color: rgba(255,255,255,0.9) !important;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .legal-page ul {
+            padding-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .legal-page li {
+            margin-bottom: 0.8rem;
+        }
+
+        .legal-page li::marker {
+            color: #a5b1ff;
+        }
+
+        .legal-page strong {
+            color: white;
+            font-weight: 600;
+        }
+
+        .legal-page a {
+            color: #a5b1ff;
+            text-decoration: none;
+            border-bottom: 1px dotted currentColor;
+            transition: all 0.2s;
+        }
+
+        .legal-page a:hover {
+            color: white;
+            border-bottom-color: white;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2.5rem;
+            padding: 0.8rem 1.8rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102,126,234,0.4);
+            text-decoration: none;
+        }
+
+        .back-link i {
+            font-size: 1rem;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .legal-page {
+                margin: 1.5rem;
+                padding: 1.5rem;
+            }
+            .legal-page h1 {
+                font-size: 2.2rem;
+            }
+            .legal-page h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">SaaS AI</div>
+        <ul class="nav-links">
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/planos.html">Planos</a></li>
+            <li><a href="/dashboard.html">Dashboard</a></li>
+            <li><a href="/chat.html">Chat</a></li>
+            <li><a href="#" id="logoutBtn">Sair</a></li>
+        </ul>
+        <div class="hamburger">☰</div>
+    </nav>
+
+    <main class="legal-page">
+        <h1><i class="fas fa-file-contract"></i> Termos de Uso</h1>
+        <p class="last-updated"><i class="far fa-calendar-alt"></i> Última atualização: 11 de março de 2026</p>
+
+        <h2><i class="fas fa-check-circle"></i> 1. Aceitação dos Termos</h2>
+        <p>Ao acessar ou usar o site SaaS AI e seus serviços, você concorda em cumprir e estar vinculado a estes Termos de Uso. Se você não concordar com qualquer parte destes termos, não poderá acessar o serviço.</p>
+
+        <h2><i class="fas fa-tools"></i> 2. Uso do Serviço</h2>
+        <p>O SaaS AI fornece uma plataforma de chat com inteligência artificial, gestão de planos e pagamentos. Você concorda em usar o serviço apenas para fins legais e de acordo com todas as leis aplicáveis. É proibido:</p>
+        <ul>
+            <li>Utilizar o serviço para atividades ilegais ou não autorizadas.</li>
+            <li>Tentar burlar os limites de mensagens ou planos.</li>
+            <li>Reproduzir, duplicar, copiar ou revender qualquer parte do serviço sem autorização.</li>
+        </ul>
+
+        <h2><i class="fas fa-credit-card"></i> 3. Planos e Pagamentos</h2>
+        <p>Os planos são oferecidos em diferentes níveis (Bronze, Prata, Ouro). O pagamento é processado via Mercado Pago (Pix). Após a confirmação, o plano será ativado por 30 dias. Renovações automáticas podem ser configuradas, mas você pode cancelar a qualquer momento. Reembolsos seguem a política do Mercado Pago.</p>
+
+        <h2><i class="fas fa-comment-dots"></i> 4. Limite de Mensagens</h2>
+        <p>Usuários do plano gratuito têm direito a um número limitado de mensagens por mês (conforme definido). Ao atingir o limite, o acesso ao chat será bloqueado até a assinatura de um plano pago ou reinício do ciclo mensal.</p>
+
+        <h2><i class="fas fa-copyright"></i> 5. Propriedade Intelectual</h2>
+        <p>Todo o conteúdo, design, logotipos e software são de propriedade exclusiva do SaaS AI ou de seus licenciadores. Você não pode copiar, modificar ou distribuir qualquer conteúdo sem permissão.</p>
+
+        <h2><i class="fas fa-exclamation-triangle"></i> 6. Limitação de Responsabilidade</h2>
+        <p>O SaaS AI não será responsável por danos indiretos, incidentais ou consequenciais resultantes do uso ou da incapacidade de usar o serviço. O serviço é fornecido "como está", sem garantias de qualquer tipo.</p>
+
+        <h2><i class="fas fa-sync-alt"></i> 7. Alterações nos Termos</h2>
+        <p>Reservamo-nos o direito de modificar estes termos a qualquer momento. As alterações entrarão em vigor imediatamente após a publicação no site. O uso continuado do serviço constitui aceitação dos novos termos.</p>
+
+        <h2><i class="fas fa-envelope"></i> 8. Contato</h2>
+        <p>Para dúvidas sobre estes Termos, entre em contato pelo e-mail: <a href="mailto:contato@saasai.com">contato@saasai.com</a></p>
+
+        <a href="/index.html" class="back-link"><i class="fas fa-arrow-left"></i> Voltar para a página inicial</a>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>SaaS AI</h4>
+                    <p>Transformando o atendimento com inteligência artificial.</p>
+                </div>
+                <div>
+                    <h4>Links rápidos</h4>
+                    <ul>
+                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="/planos.html">Planos</a></li>
+                        <li><a href="/dashboard.html">Dashboard</a></li>
+                        <li><a href="/chat.html">Chat</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="/termos.html">Termos de uso</a></li>
+                        <li><a href="/privacidade.html">Política de privacidade</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Redes sociais</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 SaaS AI. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/api.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            if (hamburger && navLinks) {
+                hamburger.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                });
+                navLinks.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('active');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

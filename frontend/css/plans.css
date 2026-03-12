@@ -1,0 +1,257 @@
+/* ===== plans.css – Estilos profissionais para a página de planos ===== */
+
+.plans-page {
+    background: #0a0a1a;
+    min-height: calc(100vh - 80px);
+    padding: 4rem 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.8rem;
+    margin-bottom: 3rem;
+    color: #fff;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.plan-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    align-items: stretch;
+}
+
+.plan-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.plan-card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+    border-radius: 32px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.plan-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.plan-card:hover::before {
+    opacity: 0.5;
+}
+
+.plan-card.popular {
+    transform: scale(1.05);
+    border: 2px solid #a5b1ff;
+    box-shadow: 0 0 30px rgba(165, 177, 255, 0.3);
+}
+
+.plan-card.popular:hover {
+    transform: scale(1.05) translateY(-5px);
+}
+
+.popular-badge {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: linear-gradient(135deg, #fdcb6e, #e17055);
+    color: #1a1a2e;
+    padding: 0.3rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.plan-card h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.price {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #a5b1ff;
+    margin: 1rem 0 1.5rem;
+    line-height: 1.2;
+}
+
+.price .currency {
+    font-size: 1.5rem;
+    vertical-align: super;
+    margin-right: 0.2rem;
+}
+
+.price .period {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+}
+
+.features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    flex-grow: 1;
+    text-align: left;
+}
+
+.features li {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.features i {
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+}
+
+.features .fa-check-circle {
+    color: #00b894;
+}
+
+.features .fa-times-circle {
+    color: #d63031;
+}
+
+.features li.disabled {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-plan {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: auto;
+}
+
+.btn-plan:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsividade aprimorada – mantendo estilos originais e adicionando breakpoints */
+@media (max-width: 1024px) {
+    .section-title {
+        font-size: 2.5rem;
+    }
+    .plan-card h3 {
+        font-size: 1.8rem;
+    }
+    .price {
+        font-size: 2.4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2.2rem;
+    }
+    .plan-cards {
+        grid-template-columns: 1fr;
+    }
+    .plan-card.popular {
+        transform: scale(1);
+    }
+    .plan-card.popular:hover {
+        transform: translateY(-5px);
+    }
+    .container {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .plans-page {
+        padding: 2rem 0;
+    }
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+    .plan-card {
+        padding: 1.5rem 1rem;
+    }
+    .plan-card h3 {
+        font-size: 1.5rem;
+    }
+    .price {
+        font-size: 2rem;
+    }
+    .price .currency {
+        font-size: 1.2rem;
+    }
+    .price .period {
+        font-size: 0.9rem;
+    }
+    .features li {
+        font-size: 0.95rem;
+    }
+    .btn-plan {
+        font-size: 1rem;
+        padding: 0.8rem;
+    }
+    .popular-badge {
+        top: 10px;
+        right: 10px;
+        padding: 0.2rem 1rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Ajuste para telas muito pequenas (ex: 320px) */
+@media (max-width: 360px) {
+    .plan-card {
+        padding: 1.2rem 0.8rem;
+    }
+    .features li {
+        gap: 0.3rem;
+    }
+    .features i {
+        font-size: 1rem;
+        width: 20px;
+    }
+}
