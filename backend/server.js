@@ -25,7 +25,7 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 
 const connectDB = require('./config/db');
-const jwtAuth = require('./middleware/jwtAuth'); // Middleware JWT (deve ignorar rotas públicas)
+const jwtAuth = require('./middleware/jwtAuth');
 const errorMiddleware = require('./middleware/errorMiddleware');
 
 dotenv.config();
@@ -46,20 +46,29 @@ dotenv.config();
 const app = express();
 
 // =======================
+// Configuração importante para cloud
+// =======================
+app.set('trust proxy', 1);
+
+// =======================
 // Segurança e performance
 // =======================
-app.use(helmet());              // Proteção HTTP headers
-app.use(compression());         // Comprimir respostas JSON/HTML
-app.use(morgan('dev'));         // Logging de requisições
+app.use(helmet());
+app.use(compression());
+app.use(morgan('dev'));
 
 // =======================
 // CORS seguro
 // =======================
+const allowedOrigin = process.env.FRONTEND_URL || '*';
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
-  methods: ['GET','POST','PUT','DELETE','PATCH'],
+  origin: allowedOrigin,
+  methods: ['GET','POST','PUT','DELETE','PATCH','OPTIONS'],
   credentials: true
 }));
+
+app.options('*', cors());
 
 // =======================
 // Parser de JSON e URL encode
@@ -71,8 +80,8 @@ app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 // Rate Limiting profissional
 // =======================
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100,                 // máximo de 100 requisições por IP
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -80,6 +89,7 @@ const apiLimiter = rateLimit({
     message: 'Muitas requisições, tente novamente mais tarde.'
   }
 });
+
 app.use('/api/', apiLimiter);
 
 // =======================
@@ -88,13 +98,19 @@ app.use('/api/', apiLimiter);
 app.use('/uploads', express.static(path.join(__dirname, '../frontend/assets/uploads')));
 
 // =======================
-// Middleware JWT global para rotas protegidas
+// Health Check (Render usa isso)
 // =======================
-// ATENÇÃO: Este middleware é aplicado a todas as rotas /api/*.
-// Ele deve ser configurado para ignorar rotas públicas como:
-// - /api/auth/register, /api/auth/login, /api/auth/forgot-password, /api/auth/reset-password
-// - /api/payments/webhook (webhook do Mercado Pago)
-// Caso contrário, essas rotas retornarão erro de autenticação.
+app.get('/', (req, res) => {
+  res.json({
+    status: 'online',
+    service: 'Projeto SaaS API',
+    timestamp: new Date()
+  });
+});
+
+// =======================
+// Middleware JWT global
+// =======================
 app.use('/api', jwtAuth);
 
 // =======================
@@ -115,6 +131,11 @@ app.use(errorMiddleware);
 // Iniciar servidor
 // =======================
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
+  console.log('=================================');
   console.log(`🚀 Server rodando na porta ${PORT}`);
+  console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔗 API pronta`);
+  console.log('=================================');
 });
