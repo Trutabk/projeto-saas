@@ -58,13 +58,13 @@ app.use(compression());
 app.use(morgan('dev'));
 
 // =======================
-// CORS seguro
+// CORS seguro (usa variável FRONTEND_URL ou '*' em desenvolvimento)
 // =======================
 const allowedOrigin = process.env.FRONTEND_URL || '*';
 
 app.use(cors({
   origin: allowedOrigin,
-  methods: ['GET','POST','PUT','DELETE','PATCH','OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   credentials: true
 }));
 
