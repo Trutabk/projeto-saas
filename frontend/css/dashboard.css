@@ -501,6 +501,12 @@ tr:last-child td {
 /* Oculta em telas pequenas (opcional – mantenha ou remova conforme preferir) */
 @media (max-width: 768px) {
     .nav-center {
-        display: none;
+        position: static; /* tira o posicionamento absoluto */
+        transform: none;
+        margin: 0 1rem; /* dá um espaçamento */
+    }
+    .btn-chat-nav {
+        padding: 0.3rem 1rem;
+        font-size: 0.9rem;
     }
 }
