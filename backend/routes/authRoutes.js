@@ -9,10 +9,13 @@ const {
   resetPassword
 } = require('../controllers/authController');
 
+// Rotas públicas
 router.post('/register', register);
 router.post('/login', login);
-router.post('/logout', protect, logout);
 router.post('/forgot-password', forgotPassword);
-router.put('/reset-password', resetPassword); // ou router.post se preferir
+router.put('/reset-password', resetPassword); // ou router.post, conforme sua preferência
+
+// Rotas protegidas
+router.post('/logout', protect, logout);
 
 module.exports = router;

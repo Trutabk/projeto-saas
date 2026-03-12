@@ -10,10 +10,10 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   // Plano do usuário
   plan: {
-    type: { 
-      type: String, 
-      enum: ['free', 'bronze', 'prata', 'ouro', 'personalizado'], 
-      default: 'free' 
+    type: {
+      type: String,
+      enum: ['free', 'bronze', 'prata', 'ouro', 'personalizado'],
+      default: 'free'
     },
     expiresAt: { type: Date },
     purchasedPlans: [{ type: String }] // histórico de planos adquiridos

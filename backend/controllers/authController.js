@@ -165,7 +165,7 @@ exports.resetPassword = async (req, res, next) => {
       return res.status(400).json({ message: 'Token inválido ou expirado' });
     }
 
-    user.password = password;
+    user.password = password; // será hashado pelo pre-save
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save();
