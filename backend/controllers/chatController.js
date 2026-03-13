@@ -457,20 +457,35 @@ exports.sendMessage = async (req, res, next) => {
       return res.status(403).json({ message: 'Acesso negado' });
     }
 
-    // Construir mensagem do usuário
+    // Construir conteúdo para o histórico (texto simples) e para a IA (multimodal)
+    let userContentForHistory = text || (files?.length ? '[Arquivo enviado]' : '');
+    let userContentForAI;
+
+    if (imageContents.length > 0) {
+      // Se há imagens, monta um array com texto e imagens
+      userContentForAI = [];
+      if (text && text.trim()) {
+        userContentForAI.push({ type: 'text', text: text.trim() });
+      }
+      userContentForAI.push(...imageContents);
+    } else {
+      // Apenas texto
+      userContentForAI = text || '';
+    }
+
     const userMessage = {
       role: 'user',
-      content: text || (files?.length ? '[Arquivo enviado]' : ''),
+      content: userContentForHistory,
       files: fileIds,
       createdAt: new Date()
     };
     conversation.messages.push(userMessage);
     await conversation.save();
 
-    // Preparar histórico (últimas 10 mensagens)
+    // Preparar histórico (últimas 10 mensagens) - apenas texto para contexto
     const history = conversation.messages.slice(-10).map(msg => ({
       role: msg.role,
-      content: msg.content
+      content: msg.content // Aqui usamos o conteúdo textual salvo (não multimodal)
     }));
 
     // Detecção de tarefa e busca web
@@ -533,10 +548,11 @@ O código deve ser executável, escalável, seguro e pronto para produção.
       content: finalSystemPromptContent
     };
 
+    // Monta as mensagens para a IA: system, histórico e a mensagem atual (com conteúdo multimodal)
     const apiMessages = [
       systemPrompt,
       ...history,
-      { role: 'user', content: userMessage.content }
+      { role: 'user', content: userContentForAI }
     ];
 
     const hasImages = imageContents.length > 0;
