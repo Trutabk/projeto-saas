@@ -469,7 +469,8 @@ exports.sendMessage = async (req, res, next) => {
     console.log('comparação (==):', conversation.user == userId);
     console.log('=============================');
 
-    if (conversation.user.toString() !== userId) {
+    // 🔧 CORREÇÃO: usar .equals() para comparar ObjectIds corretamente
+    if (!conversation.user.equals(userId)) {
       return res.status(403).json({ message: 'Acesso negado' });
     }
 
