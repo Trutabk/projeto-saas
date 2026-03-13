@@ -17,12 +17,19 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: var(--light);
   color: var(--dark);
   line-height: 1.6;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 /* Container responsivo */
@@ -52,6 +59,8 @@ body {
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: auto;
+  min-height: 60px;
 }
 
 /* Navbar em telas grandes */
@@ -74,6 +83,30 @@ body {
   background: var(--gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+}
+
+/* Botão home na navbar */
+.home-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(108, 92, 231, 0.1);
+  border-radius: 50%;
+  color: var(--primary);
+  font-size: 1.2rem;
+  transition: all 0.3s;
+  text-decoration: none;
+  margin-left: 1rem;
+}
+
+.home-button:hover {
+  background: var(--gradient);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
 }
 
 /* Estilo para os links da navbar (desktop) */
@@ -81,6 +114,7 @@ body {
   display: flex;
   list-style: none;
   gap: 2rem;
+  align-items: center;
 }
 
 .nav-links a {
@@ -119,6 +153,8 @@ body {
   border-radius: 50px;
   font-weight: 600;
   transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .btn-dashboard {
@@ -129,6 +165,7 @@ body {
 .btn-login {
   border: 2px solid var(--primary);
   color: var(--primary) !important;
+  background: transparent;
 }
 
 .btn-dashboard:hover,
@@ -152,6 +189,10 @@ body {
 
 /* Media query para mobile */
 @media (max-width: 768px) {
+  .navbar {
+    padding: 0.5rem 1rem;
+  }
+
   .nav-links {
     display: none;
     flex-direction: column;
@@ -210,6 +251,30 @@ body {
   .hamburger {
     display: block;
   }
+
+  .home-button {
+    margin-left: 0;
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+}
+
+/* Ajuste para telas muito pequenas */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .logo {
+    font-size: 1.3rem;
+  }
+
+  .home-button {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
 }
 
 /* Botões globais */
@@ -223,6 +288,9 @@ body {
   width: 100%;
   font-size: 1rem;                     /* REDUZIDO: antes 1.1rem */
   transition: opacity 0.3s, transform 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
 }
 
 .btn-plan:hover {
@@ -241,6 +309,7 @@ body {
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
   text-decoration: none;
+  text-align: center;
 }
 
 .btn-cta:hover {
@@ -271,4 +340,18 @@ img {
   background: var(--gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* ===== AJUSTES PARA O LAYOUT DO CHAT ===== */
+/* Garantir que o chat ocupe o espaço correto após a navbar */
+.chat-layout {
+  height: calc(100vh - 60px);  /* 60px é a altura da navbar reduzida */
+  overflow: hidden;
+}
+
+/* Ajuste para quando a navbar estiver colapsada em mobile */
+@media (max-width: 768px) {
+  .chat-layout {
+    height: calc(100vh - 50px);  /* Altura da navbar em mobile */
+  }
 }
