@@ -411,6 +411,16 @@ OBJETIVO FINAL
 ━━━━━━━━━━━━━━━━━━━━
 
 Ajudar o usuário a resolver problemas reais de engenharia de software fornecendo respostas confiáveis, técnicas e aplicáveis.
+
+━━━━━━━━━━━━━━━━━━━━
+USO DE RESULTADOS DE PESQUISA
+━━━━━━━━━━━━━━━━━━━━
+
+Sempre que informações de pesquisa web forem fornecidas no formato "[PESQUISA WEB REALIZADA...]", você DEVE usá-las como fonte primária para responder à pergunta do usuário.
+
+- Para perguntas sobre data/hora atual, use o timestamp fornecido na pesquisa.
+- Para preços, cotações ou notícias, baseie sua resposta exclusivamente nos resultados apresentados.
+- Se os resultados não contiverem a informação solicitada, informe claramente que não foi possível obter dados atualizados.
 `;
 
 // ======================
@@ -423,12 +433,11 @@ exports.sendMessage = async (req, res, next) => {
     const userId = req.user._id;
     const conversationId = req.params.conversationId;
 
-    // ===== LOGS DE DEPURAÇÃO (adicionados da segunda versão) =====
+    // ===== LOGS DE DEPURAÇÃO =====
     console.log('===== DEBUG sendMessage =====');
     console.log('conversationId:', conversationId);
     console.log('userId:', userId);
     console.log('userId type:', typeof userId);
-    // =============================================================
 
     // Verificar limite de mensagens
     const user = await User.findById(userId);
@@ -457,19 +466,17 @@ exports.sendMessage = async (req, res, next) => {
 
     // Buscar a conversa e verificar permissão
     let conversation = await Conversation.findById(conversationId);
-    console.log('conversation encontrada?', conversation ? 'sim' : 'não'); // LOG
+    console.log('conversation encontrada?', conversation ? 'sim' : 'não');
     if (!conversation) {
       return res.status(404).json({ message: 'Conversa não encontrada' });
     }
 
-    // LOGS adicionais para depuração
     console.log('conversation.user:', conversation.user);
     console.log('conversation.user type:', typeof conversation.user);
-    console.log('comparação (toString):', conversation.user.toString() === userId);
-    console.log('comparação (==):', conversation.user == userId);
+    console.log('comparação (equals):', conversation.user.equals(userId));
     console.log('=============================');
 
-    // 🔧 CORREÇÃO: usar .equals() para comparar ObjectIds corretamente
+    // Verificação de permissão usando .equals()
     if (!conversation.user.equals(userId)) {
       return res.status(403).json({ message: 'Acesso negado' });
     }
@@ -479,14 +486,12 @@ exports.sendMessage = async (req, res, next) => {
     let userContentForAI;
 
     if (imageContents.length > 0) {
-      // Se há imagens, monta um array com texto e imagens
       userContentForAI = [];
       if (text && text.trim()) {
         userContentForAI.push({ type: 'text', text: text.trim() });
       }
       userContentForAI.push(...imageContents);
     } else {
-      // Apenas texto
       userContentForAI = text || '';
     }
 
@@ -499,10 +504,10 @@ exports.sendMessage = async (req, res, next) => {
     conversation.messages.push(userMessage);
     await conversation.save();
 
-    // Preparar histórico (últimas 10 mensagens) - apenas texto para contexto
+    // Preparar histórico (últimas 200 mensagens) - apenas texto para contexto
     const history = conversation.messages.slice(-200).map(msg => ({
       role: msg.role,
-      content: msg.content // Aqui usamos o conteúdo textual salvo (não multimodal)
+      content: msg.content
     }));
 
     // Detecção de tarefa e busca web
@@ -512,15 +517,30 @@ exports.sendMessage = async (req, res, next) => {
       console.log(`📋 Tarefa detectada: ${task.type}, detalhes: ${task.details.join(', ')}`);
     }
 
+    // Se for pesquisa (research), fazer busca na web
     if (task.type === 'research' && imageContents.length === 0) {
       console.log(`🌐 Pesquisando na web: "${text}"`);
       const results = await searchWeb(text);
       if (results.length > 0) {
-        const summary = results.map((r, i) => `${i+1}. ${r.title} - ${r.snippet} (${r.url})`).join('\n');
-        history.push({ role: 'system', content: `Resultados de pesquisa web:\n${summary}` });
+        const summary = results.map((r, i) => `${i+1}. **${r.title}**\n   - Fonte: ${r.url}\n   - Trecho: ${r.snippet}`).join('\n\n');
+        
+        // Adiciona timestamp e instrução explícita para usar os resultados
+        const now = new Date();
+        const timestamp = now.toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'long' });
+        
+        history.push({ 
+          role: 'system', 
+          content: `[PESQUISA WEB REALIZADA em ${timestamp}]\n\n${summary}\n\n**INSTRUÇÃO:** Use APENAS as informações acima para responder à pergunta do usuário. Se a informação não estiver nos resultados, informe que não encontrou dados atualizados.` 
+        });
+        
         console.log(`✅ ${results.length} resultados adicionados ao contexto.`);
+        console.log('📝 Primeiros 200 caracteres dos resultados:', summary.substring(0, 200));
       } else {
         console.log('⚠️ Nenhum resultado encontrado.');
+        history.push({ 
+          role: 'system', 
+          content: `[PESQUISA WEB REALIZADA em ${new Date().toLocaleString()}]\n\nNenhum resultado encontrado. Informe ao usuário que não foi possível obter dados atualizados.` 
+        });
       }
     }
 
