@@ -29,7 +29,10 @@
             <li><a href="/planos.html">Planos</a></li>
             <li><a href="#" id="logoutBtn">Sair</a></li>
         </ul>
-        <div class="hamburger">☰</div>
+        <!-- Botão home substituindo o antigo hamburger -->
+        <a href="/" class="home-button" title="Página inicial">
+            <i class="fas fa-home"></i>
+        </a>
     </nav>
 
     <div class="chat-layout">
@@ -54,7 +57,7 @@
                     <h2 id="currentConversationTitle">Assistente Virtual</h2>
                     <span class="status online"><i class="fas fa-circle"></i> Online</span>
                 </div>
-                <button id="deleteConversationBtn" class="btn-delete-conv" title="Excluir conversa" style>
+                <button id="deleteConversationBtn" class="btn-delete-conv" title="Excluir conversa">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             </div>
@@ -75,6 +78,5 @@
     <script type="module" src="js/api.js"></script>
     <script type="module" src="js/auth.js"></script>
     <script type="module" src="js/chat.js"></script>
-    <!-- Script do menu hambúrguer (já deve existir no seu arquivo ou será incluído aqui) -->
 </body>
 </html>
