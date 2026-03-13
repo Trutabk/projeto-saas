@@ -1,4 +1,4 @@
-const Chat = require('../models/Chat');
+const Conversation = require('../models/Conversation');
 const File = require('../models/File');
 const User = require('../models/User');
 const callWithFallback = require('../utils/aiFallback');
@@ -8,128 +8,48 @@ const { FREE_MESSAGE_LIMIT } = require('../config/limits');
 const fs = require('fs');
 const path = require('path');
 
-exports.sendMessage = async (req, res, next) => {
-  try {
-    const { text } = req.body;
-    const files = req.files;
-    const userId = req.user._id;
+// ======================
+// Função auxiliar para processar uploads
+// ======================
+async function processUploadedFiles(files, userId) {
+  let fileIds = [];
+  let imageContents = [];
 
-    // === Verificação de limite de mensagens (plano free) ===
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
+  if (files && files.length > 0) {
+    for (const file of files) {
+      const newFile = await File.create({
+        user: userId,
+        filename: file.filename,
+        originalName: file.originalname,
+        mimetype: file.mimetype,
+        size: file.size,
+        path: file.path,
+        url: `${process.env.BACKEND_URL}/uploads/${file.filename}`,
+      });
+      fileIds.push(newFile._id);
 
-    const now = new Date();
-    const hasActivePlan = user.plan.type !== 'free' && user.plan.expiresAt > now;
-
-    if (!hasActivePlan) {
-      const daysSinceReset = (now - user.lastMessageReset) / (1000 * 60 * 60 * 24);
-      if (daysSinceReset > 30) {
-        user.messageCount = 0;
-        user.lastMessageReset = now;
-        await user.save();
-      }
-
-      if (user.messageCount >= FREE_MESSAGE_LIMIT) {
-        return res.status(403).json({
-          message: 'Você atingiu o limite de mensagens gratuitas. Assine um plano para continuar.',
-          code: 'LIMIT_EXCEEDED'
-        });
-      }
-    }
-
-    // Processar arquivos enviados
-    let fileIds = [];
-    let imageContents = [];
-
-    if (files && files.length > 0) {
-      for (const file of files) {
-        const newFile = await File.create({
-          user: userId,
-          filename: file.filename,
-          originalName: file.originalname,
-          mimetype: file.mimetype,
-          size: file.size,
-          path: file.path,
-          url: `${process.env.BACKEND_URL}/uploads/${file.filename}`,
-        });
-        fileIds.push(newFile._id);
-
-        if (file.mimetype.startsWith('image/')) {
-          try {
-            const imagePath = path.join(__dirname, '../../frontend/assets/uploads', file.filename);
-            const base64 = fs.readFileSync(imagePath, { encoding: 'base64' });
-            const dataUrl = `data:${file.mimetype};base64,${base64}`;
-            imageContents.push({
-              type: "image_url",
-              image_url: { url: dataUrl }
-            });
-          } catch (err) {
-            console.error('Erro ao converter imagem:', err);
-          }
+      if (file.mimetype.startsWith('image/')) {
+        try {
+          const imagePath = path.join(__dirname, '../../frontend/assets/uploads', file.filename);
+          const base64 = fs.readFileSync(imagePath, { encoding: 'base64' });
+          const dataUrl = `data:${file.mimetype};base64,${base64}`;
+          imageContents.push({
+            type: "image_url",
+            image_url: { url: dataUrl }
+          });
+        } catch (err) {
+          console.error('Erro ao converter imagem:', err);
         }
       }
     }
+  }
+  return { fileIds, imageContents };
+}
 
-    // Construir conteúdo da mensagem do usuário
-    const userMessageContent = [];
-    if (text && text.trim()) {
-      userMessageContent.push({ type: "text", text: text.trim() });
-    }
-    if (imageContents.length > 0) {
-      userMessageContent.push(...imageContents.slice(0, 5));
-    }
-    if (userMessageContent.length === 0) {
-      return res.status(400).json({ message: 'Mensagem vazia ou sem conteúdo' });
-    }
-
-    // 🔍 Detecção avançada de tarefa
-    let task = { type: 'explain', details: [] };
-    if (text && text.trim() && imageContents.length === 0) {
-      task = detectTaskType(text);
-      console.log(`📋 Tarefa detectada: ${task.type}, detalhes: ${task.details.join(', ')}, confiança: ${task.confidence}`);
-    }
-
-    // Se for pesquisa (research), fazer busca na web
-    if (task.type === 'research' && imageContents.length === 0) {
-      console.log(`🌐 Pesquisando na web: "${text}"`);
-      const results = await searchWeb(text);
-      if (results.length > 0) {
-        const summary = results.map((r, i) => `${i+1}. ${r.title} - ${r.snippet} (${r.url})`).join('\n');
-        userMessageContent.push({
-          type: 'text',
-          text: `\n\nResultados de pesquisa web:\n${summary}`
-        });
-        console.log(`✅ ${results.length} resultados adicionados ao contexto.`);
-      } else {
-        console.log('⚠️ Nenhum resultado encontrado.');
-      }
-    }
-
-    // Buscar ou criar chat do usuário
-    let chat = await Chat.findOne({ user: userId });
-    if (!chat) {
-      chat = new Chat({ user: userId, messages: [] });
-    }
-
-    const userMessage = {
-      role: 'user',
-      content: text || (files.length ? '[Imagem enviada]' : ''),
-      files: fileIds,
-      createdAt: new Date()
-    };
-    chat.messages.push(userMessage);
-    await chat.save();
-
-    // Preparar histórico (últimas 10 mensagens)
-    const history = chat.messages.slice(-10).map(msg => ({
-      role: msg.role,
-      content: msg.content
-    }));
-
-    // ======================
-    // SYSTEM PROMPT ULTRA AVANÇADO (ATUALIZADO)
-    // ======================
-    const baseSystemPromptContent = `
+// ======================
+// System Prompt Ultra Avançado (completo)
+// ======================
+const baseSystemPromptContent = `
 Você é um assistente de inteligência artificial especializado em engenharia de software profissional.
 
 Você possui conhecimento avançado em:
@@ -493,8 +413,87 @@ OBJETIVO FINAL
 Ajudar o usuário a resolver problemas reais de engenharia de software fornecendo respostas confiáveis, técnicas e aplicáveis.
 `;
 
-    let finalSystemPromptContent = baseSystemPromptContent;
+// ======================
+// Enviar mensagem para uma conversa
+// ======================
+exports.sendMessage = async (req, res, next) => {
+  try {
+    const { text } = req.body;
+    const files = req.files;
+    const userId = req.user._id;
+    const conversationId = req.params.conversationId;
 
+    // Verificar limite de mensagens
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
+
+    const now = new Date();
+    const hasActivePlan = user.plan.type !== 'free' && user.plan.expiresAt > now;
+
+    if (!hasActivePlan) {
+      const daysSinceReset = (now - user.lastMessageReset) / (1000 * 60 * 60 * 24);
+      if (daysSinceReset > 30) {
+        user.messageCount = 0;
+        user.lastMessageReset = now;
+        await user.save();
+      }
+      if (user.messageCount >= FREE_MESSAGE_LIMIT) {
+        return res.status(403).json({
+          message: 'Você atingiu o limite de mensagens gratuitas. Assine um plano para continuar.',
+          code: 'LIMIT_EXCEEDED'
+        });
+      }
+    }
+
+    // Processar arquivos
+    const { fileIds, imageContents } = await processUploadedFiles(files, userId);
+
+    // Buscar a conversa e verificar permissão
+    let conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return res.status(404).json({ message: 'Conversa não encontrada' });
+    }
+    if (conversation.user.toString() !== userId) {
+      return res.status(403).json({ message: 'Acesso negado' });
+    }
+
+    // Construir mensagem do usuário
+    const userMessage = {
+      role: 'user',
+      content: text || (files?.length ? '[Arquivo enviado]' : ''),
+      files: fileIds,
+      createdAt: new Date()
+    };
+    conversation.messages.push(userMessage);
+    await conversation.save();
+
+    // Preparar histórico (últimas 10 mensagens)
+    const history = conversation.messages.slice(-10).map(msg => ({
+      role: msg.role,
+      content: msg.content
+    }));
+
+    // Detecção de tarefa e busca web
+    let task = { type: 'explain', details: [] };
+    if (text && text.trim() && imageContents.length === 0) {
+      task = detectTaskType(text);
+      console.log(`📋 Tarefa detectada: ${task.type}, detalhes: ${task.details.join(', ')}`);
+    }
+
+    if (task.type === 'research' && imageContents.length === 0) {
+      console.log(`🌐 Pesquisando na web: "${text}"`);
+      const results = await searchWeb(text);
+      if (results.length > 0) {
+        const summary = results.map((r, i) => `${i+1}. ${r.title} - ${r.snippet} (${r.url})`).join('\n');
+        history.push({ role: 'system', content: `Resultados de pesquisa web:\n${summary}` });
+        console.log(`✅ ${results.length} resultados adicionados ao contexto.`);
+      } else {
+        console.log('⚠️ Nenhum resultado encontrado.');
+      }
+    }
+
+    // System prompt (com modo programador sênior se necessário)
+    let finalSystemPromptContent = baseSystemPromptContent;
     if (task.type === 'code' || task.type === 'debug') {
       finalSystemPromptContent += `
 
@@ -505,66 +504,27 @@ MODO PROGRAMADOR SÊNIOR
 Quando gerar código siga padrões profissionais.
 
 🔹 Código Completo
-
 Sempre forneça implementações completas.
-
-Inclua:
-
-• imports  
-• dependências  
-• inicializações  
-
+Inclua imports, dependências e inicializações.
 Nunca entregue apenas trechos incompletos.
 
 🔹 Arquitetura
-
-Estruture o código usando:
-
-• funções
-• classes
-• módulos
+Estruture o código usando funções, classes e módulos.
 
 🔹 Segurança
-
-Considere:
-
-• validação de entrada
-• sanitização
-• prevenção de vulnerabilidades
+Considere validação de entrada, sanitização e prevenção de vulnerabilidades.
 
 🔹 Tratamento de erros
-
-Use:
-
-• try/catch
-• mensagens claras
-• fallback quando possível
+Use try/catch com mensagens claras e fallback quando possível.
 
 🔹 Testes
-
-Inclua:
-
-• exemplo de uso
-• teste simples
-• instrução de execução
+Inclua exemplo de uso, teste simples e instrução de execução.
 
 🔹 Performance
-
-Sempre que possível:
-
-• otimize algoritmos
-• evite loops desnecessários
-• sugira melhorias
+Sempre que possível, otimize algoritmos, evite loops desnecessários e sugira melhorias.
 
 🔹 Entrega profissional
-
-O código deve ser:
-
-• executável
-• escalável
-• seguro
-• pronto para produção
-
+O código deve ser executável, escalável, seguro e pronto para produção.
 `;
     }
 
@@ -576,7 +536,7 @@ O código deve ser:
     const apiMessages = [
       systemPrompt,
       ...history,
-      { role: 'user', content: userMessageContent }
+      { role: 'user', content: userMessage.content }
     ];
 
     const hasImages = imageContents.length > 0;
@@ -589,6 +549,15 @@ O código deve ser:
       aiResponseText = 'Desculpe, não consegui processar sua mensagem no momento. Tente novamente mais tarde.';
     }
 
+    const assistantMessage = {
+      role: 'assistant',
+      content: aiResponseText,
+      createdAt: new Date()
+    };
+    conversation.messages.push(assistantMessage);
+    conversation.updatedAt = new Date();
+    await conversation.save();
+
     // Incrementar contagem de mensagens (apenas se não for plano pago)
     if (!hasActivePlan) {
       await User.updateOne(
@@ -596,14 +565,6 @@ O código deve ser:
         { $inc: { messageCount: 1 } }
       );
     }
-
-    const assistantMessage = {
-      role: 'assistant',
-      content: aiResponseText || 'Desculpe, não consegui processar sua mensagem.',
-      createdAt: new Date()
-    };
-    chat.messages.push(assistantMessage);
-    await chat.save();
 
     res.json({ userMessage, assistantMessage });
 
@@ -613,11 +574,86 @@ O código deve ser:
   }
 };
 
-exports.getHistory = async (req, res, next) => {
+// ======================
+// Criar nova conversa
+// ======================
+exports.createConversation = async (req, res, next) => {
   try {
-    const chat = await Chat.findOne({ user: req.user._id }).populate('messages.files');
-    if (!chat) return res.json([]);
-    res.json(chat.messages);
+    const conversation = new Conversation({
+      user: req.user._id,
+      title: req.body.title || 'Nova conversa'
+    });
+    await conversation.save();
+    res.status(201).json(conversation);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ======================
+// Listar conversas do usuário
+// ======================
+exports.listConversations = async (req, res, next) => {
+  try {
+    const conversations = await Conversation.find({ user: req.user._id })
+      .sort('-updatedAt')
+      .select('title updatedAt createdAt');
+    res.json(conversations);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ======================
+// Obter mensagens de uma conversa
+// ======================
+exports.getConversationMessages = async (req, res, next) => {
+  try {
+    const conversation = await Conversation.findOne({
+      _id: req.params.id,
+      user: req.user._id
+    }).populate('messages.files');
+    if (!conversation) {
+      return res.status(404).json({ message: 'Conversa não encontrada' });
+    }
+    res.json(conversation.messages);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ======================
+// Deletar uma conversa
+// ======================
+exports.deleteConversation = async (req, res, next) => {
+  try {
+    const result = await Conversation.deleteOne({
+      _id: req.params.id,
+      user: req.user._id
+    });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Conversa não encontrada' });
+    }
+    res.json({ message: 'Conversa excluída' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ======================
+// Renomear conversa
+// ======================
+exports.renameConversation = async (req, res, next) => {
+  try {
+    const conversation = await Conversation.findOneAndUpdate(
+      { _id: req.params.id, user: req.user._id },
+      { title: req.body.title },
+      { new: true }
+    );
+    if (!conversation) {
+      return res.status(404).json({ message: 'Conversa não encontrada' });
+    }
+    res.json(conversation);
   } catch (error) {
     next(error);
   }
