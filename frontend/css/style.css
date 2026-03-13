@@ -45,7 +45,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 5%;
+  padding: 0.5rem 5%;            /* REDUZIDO: antes 1rem, agora 0.5rem */
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   position: sticky;
@@ -57,19 +57,19 @@ body {
 /* Navbar em telas grandes */
 @media (min-width: 1024px) {
   .navbar {
-    padding: 1rem 10%;
+    padding: 0.5rem 10%;          /* REDUZIDO: antes 1rem, agora 0.5rem */
   }
 }
 
 /* Navbar em telas extra grandes */
 @media (min-width: 1440px) {
   .navbar {
-    padding: 1rem 15%;
+    padding: 0.5rem 15%;          /* REDUZIDO: antes 1rem, agora 0.5rem */
   }
 }
 
 .logo {
-  font-size: 1.8rem;
+  font-size: 1.5rem;               /* REDUZIDO: antes 1.8rem, agora 1.5rem */
   font-weight: bold;
   background: var(--gradient);
   -webkit-background-clip: text;
@@ -115,7 +115,7 @@ body {
 /* Botões especiais na navbar */
 .btn-dashboard,
 .btn-login {
-  padding: 0.5rem 1.5rem;
+  padding: 0.4rem 1.2rem;          /* REDUZIDO: antes 0.5rem 1.5rem */
   border-radius: 50px;
   font-weight: 600;
   transition: all 0.3s;
@@ -140,7 +140,7 @@ body {
 /* Menu hambúrguer (mobile) */
 .hamburger {
   display: none;
-  font-size: 1.8rem;
+  font-size: 1.5rem;                /* REDUZIDO: antes 1.8rem */
   cursor: pointer;
   color: var(--dark);
   transition: color 0.3s;
@@ -156,12 +156,12 @@ body {
     display: none;
     flex-direction: column;
     position: absolute;
-    top: 70px;
+    top: 60px;                       /* AJUSTADO: antes 70px, agora 60px (altura da navbar reduzida) */
     left: 0;
     width: 100%;
     background: rgba(10, 10, 20, 0.95);
     backdrop-filter: blur(15px);
-    padding: 2rem;
+    padding: 1.5rem;                  /* REDUZIDO: antes 2rem */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 999;
@@ -173,16 +173,16 @@ body {
   }
 
   .nav-links li {
-    margin: 0.5rem 0;
+    margin: 0.3rem 0;                 /* REDUZIDO: antes 0.5rem */
     width: 100%;
     text-align: center;
   }
 
   .nav-links a {
     display: block;
-    padding: 0.8rem 1.5rem;
+    padding: 0.6rem 1.2rem;           /* REDUZIDO: antes 0.8rem 1.5rem */
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.1rem;                 /* REDUZIDO: antes 1.2rem */
     border-radius: 50px;
     transition: all 0.3s;
   }
@@ -202,8 +202,8 @@ body {
   .btn-dashboard,
   .btn-login {
     width: 100%;
-    padding: 0.8rem;
-    margin: 0.5rem 0;
+    padding: 0.6rem;                   /* AJUSTADO: antes 0.8rem */
+    margin: 0.3rem 0;                  /* REDUZIDO: antes 0.5rem */
     text-align: center;
   }
 
@@ -214,14 +214,14 @@ body {
 
 /* Botões globais */
 .btn-plan {
-  padding: 0.8rem 2rem;
+  padding: 0.7rem 1.8rem;             /* REDUZIDO: antes 0.8rem 2rem */
   background: var(--gradient);
   color: white;
   border: none;
   border-radius: 50px;
   cursor: pointer;
   width: 100%;
-  font-size: 1.1rem;
+  font-size: 1rem;                     /* REDUZIDO: antes 1.1rem */
   transition: opacity 0.3s, transform 0.2s;
 }
 
@@ -232,12 +232,12 @@ body {
 
 .btn-cta {
   display: inline-block;
-  padding: 1rem 2rem;
+  padding: 0.8rem 1.8rem;              /* REDUZIDO: antes 1rem 2rem */
   background: var(--gradient);
   color: white;
   border: none;
   border-radius: 50px;
-  font-size: 1.2rem;
+  font-size: 1.1rem;                    /* REDUZIDO: antes 1.2rem */
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
   text-decoration: none;
@@ -251,8 +251,8 @@ body {
 /* Ajustes para telas muito grandes */
 @media (min-width: 1440px) {
   .btn-cta {
-    font-size: 1.3rem;
-    padding: 1.2rem 2.5rem;
+    font-size: 1.2rem;                  /* REDUZIDO: antes 1.3rem */
+    padding: 1rem 2.2rem;                /* REDUZIDO: antes 1.2rem 2.5rem */
   }
 }
 
