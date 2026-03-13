@@ -500,7 +500,7 @@ exports.sendMessage = async (req, res, next) => {
     await conversation.save();
 
     // Preparar histórico (últimas 10 mensagens) - apenas texto para contexto
-    const history = conversation.messages.slice(-10).map(msg => ({
+    const history = conversation.messages.slice(-200).map(msg => ({
       role: msg.role,
       content: msg.content // Aqui usamos o conteúdo textual salvo (não multimodal)
     }));
