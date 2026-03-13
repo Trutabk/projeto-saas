@@ -131,7 +131,8 @@
   flex-direction: column;
   background: var(--bg-chat);
   backdrop-filter: blur(10px);
-  max-width: 800px;
+  width: 90vw;                /* 90% da largura da viewport */
+  max-width: none;            /* Remove limites fixos */
   margin: 0 auto;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -142,43 +143,43 @@
 .chat-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 0.8rem;                /* Reduzido para economizar espaço */
+  padding: 0.6rem 1rem;       /* Padding vertical menor */
   background: var(--gradient);
   color: white;
 }
 
 .chat-avatar {
-  width: 50px;
-  height: 50px;
+  width: 40px;                /* Reduzido de 50px */
+  height: 40px;
   border-radius: 50%;
   background: rgba(255,255,255,0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.6rem;          /* Ajustado */
 }
 
 .chat-title h2 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1rem;            /* Reduzido de 1.2rem */
 }
 
 .status {
-  font-size: 0.8rem;
+  font-size: 0.7rem;          /* Reduzido */
   display: flex;
   align-items: center;
   gap: 0.3rem;
 }
 .status i {
-  font-size: 0.6rem;
+  font-size: 0.5rem;          /* Reduzido */
   color: #00ff00;
   animation: pulse 1.5s infinite;
 }
 
 /* ===== ÁREA DE MENSAGENS ===== */
 .chat-messages {
-  flex: 1;
+  flex: 9 1 0;                /* Ocupa 90% do espaço disponível */
   padding: 1rem;
   overflow-y: auto;
   display: flex;
@@ -346,14 +347,14 @@ pre:hover .copy-button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 1rem;
+  padding: 0.6rem 1rem;       /* Padding vertical reduzido */
   background: white;
   border-top: 1px solid #ddd;
 }
 
 .chat-input-area input[type="text"] {
   flex: 1;
-  padding: 0.8rem 1rem;
+  padding: 0.6rem 1rem;       /* Reduzido de 0.8rem */
   border: 1px solid #ddd;
   border-radius: 50px;
   outline: none;
@@ -361,12 +362,12 @@ pre:hover .copy-button {
 }
 
 .file-label {
-  font-size: 1.5rem;
+  font-size: 1.3rem;          /* Reduzido de 1.5rem */
   cursor: pointer;
   color: #666;
   transition: color 0.3s;
-  width: 40px;
-  height: 40px;
+  width: 36px;                /* Reduzido de 40px */
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -381,10 +382,10 @@ pre:hover .copy-button {
   background: var(--gradient);
   border: none;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 44px;                /* Reduzido de 50px */
+  height: 44px;
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.1rem;          /* Reduzido de 1.2rem */
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -398,7 +399,7 @@ pre:hover .copy-button {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 1rem;       /* Reduzido verticalmente */
   background: #f5f5f5;
   border-top: 1px solid #ddd;
 }
@@ -406,8 +407,8 @@ pre:hover .copy-button {
 .preview-item {
   background: white;
   border-radius: 20px;
-  padding: 0.3rem 0.8rem;
-  font-size: 0.9rem;
+  padding: 0.2rem 0.7rem;     /* Reduzido */
+  font-size: 0.85rem;         /* Reduzido de 0.9rem */
   display: flex;
   align-items: center;
   gap: 0.3rem;
@@ -448,7 +449,7 @@ pre:hover .copy-button {
   }
 
   .chat-container {
-    width: 100%;
+    width: 100%;              /* Em mobile ocupa toda a largura */
     margin-left: 0;
     transition: margin-left 0.3s ease;
     border-radius: 0;
@@ -457,17 +458,17 @@ pre:hover .copy-button {
   }
 
   .chat-header {
-    padding: 0.8rem;
+    padding: 0.6rem 0.8rem;   /* Ajustado */
   }
 
   .chat-avatar {
-    width: 40px;
-    height: 40px;
-    font-size: 1.5rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1.3rem;
   }
 
   .chat-title h2 {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .message {
@@ -477,33 +478,33 @@ pre:hover .copy-button {
   }
 
   .chat-input-area {
-    padding: 0.8rem;
+    padding: 0.6rem 0.8rem;
   }
 
   .chat-input-area input[type="text"] {
-    padding: 0.6rem 0.8rem;
+    padding: 0.5rem 0.8rem;
     font-size: 0.95rem;
   }
 
   .file-label {
-    width: 36px;
-    height: 36px;
-    font-size: 1.2rem;
+    width: 34px;
+    height: 34px;
+    font-size: 1.1rem;
   }
 
   #sendBtn {
-    width: 42px;
-    height: 42px;
-    font-size: 1rem;
+    width: 40px;
+    height: 40px;
+    font-size: 0.95rem;
   }
 
   .file-preview {
-    padding: 0.4rem 0.8rem;
+    padding: 0.3rem 0.8rem;
   }
 
   .preview-item {
-    padding: 0.2rem 0.6rem;
-    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -518,17 +519,17 @@ pre:hover .copy-button {
   }
 
   .chat-input-area input[type="text"] {
-    padding: 0.5rem 0.7rem;
+    padding: 0.4rem 0.6rem;
   }
 
   .file-label {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
   }
 
   #sendBtn {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -543,10 +544,7 @@ pre:hover .copy-button {
 }
 
 @media (min-width: 1200px) {
-  .chat-container {
-    max-width: 900px;
-  }
-
+  /* Removido o max-width fixo de 900px, agora usa 90vw definido acima */
   .message {
     max-width: 65%;
   }
