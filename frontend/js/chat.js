@@ -324,8 +324,8 @@ if (sidebarToggle && sidebar) {
 
     // Fechar sidebar ao clicar fora (opcional, em mobile)
     document.addEventListener('click', (e) => {
-        if (window.innerWidth <= 768 && 
-            !sidebar.contains(e.target) && 
+        if (window.innerWidth <= 768 &&
+            !sidebar.contains(e.target) &&
             !sidebarToggle.contains(e.target) &&
             sidebar.classList.contains('open')) {
             sidebar.classList.remove('open');
