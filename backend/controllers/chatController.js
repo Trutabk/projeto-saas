@@ -423,6 +423,13 @@ exports.sendMessage = async (req, res, next) => {
     const userId = req.user._id;
     const conversationId = req.params.conversationId;
 
+    // ===== LOGS DE DEPURAÇÃO (adicionados da segunda versão) =====
+    console.log('===== DEBUG sendMessage =====');
+    console.log('conversationId:', conversationId);
+    console.log('userId:', userId);
+    console.log('userId type:', typeof userId);
+    // =============================================================
+
     // Verificar limite de mensagens
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
@@ -450,9 +457,18 @@ exports.sendMessage = async (req, res, next) => {
 
     // Buscar a conversa e verificar permissão
     let conversation = await Conversation.findById(conversationId);
+    console.log('conversation encontrada?', conversation ? 'sim' : 'não'); // LOG
     if (!conversation) {
       return res.status(404).json({ message: 'Conversa não encontrada' });
     }
+
+    // LOGS adicionais para depuração
+    console.log('conversation.user:', conversation.user);
+    console.log('conversation.user type:', typeof conversation.user);
+    console.log('comparação (toString):', conversation.user.toString() === userId);
+    console.log('comparação (==):', conversation.user == userId);
+    console.log('=============================');
+
     if (conversation.user.toString() !== userId) {
       return res.status(403).json({ message: 'Acesso negado' });
     }
