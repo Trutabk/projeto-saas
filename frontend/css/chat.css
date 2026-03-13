@@ -483,3 +483,38 @@ pre:hover .copy-button {
     background: rgba(0,0,0,0.3);
     backdrop-filter: blur(10px);
 }
+
+/* Sidebar oculta por padrão em mobile */
+@media (max-width: 768px) {
+    .conversation-sidebar {
+        position: fixed;
+        top: 70px; /* altura da navbar */
+        left: -260px; /* escondida à esquerda */
+        width: 260px;
+        height: calc(100vh - 70px);
+        transition: left 0.3s ease;
+        z-index: 1000;
+        background: rgba(20,20,40,0.95);
+        backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .conversation-sidebar.open {
+        left: 0;
+    }
+    .chat-container {
+        width: 100%;
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+    }
+}
+
+/* Em telas grandes, sidebar sempre visível */
+@media (min-width: 769px) {
+    .conversation-sidebar {
+        width: 260px;
+        display: block;
+    }
+    .sidebar-toggle {
+        display: none; /* oculta o botão em desktop */
+    }
+}

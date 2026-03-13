@@ -10,11 +10,15 @@ const sendBtn = document.getElementById('sendBtn');
 const filePreview = document.getElementById('filePreview');
 const typingIndicator = document.getElementById('typingIndicator');
 
-// Elementos da sidebar de conversas (certifique-se de que existem no HTML)
+// Elementos da sidebar de conversas
 const conversationList = document.getElementById('conversationList');
 const newConversationBtn = document.getElementById('newConversationBtn');
 const deleteConversationBtn = document.getElementById('deleteConversationBtn');
 const currentConversationTitle = document.getElementById('currentConversationTitle');
+
+// Elementos do toggle da sidebar
+const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebar = document.querySelector('.conversation-sidebar');
 
 let selectedFiles = [];
 let currentConversationId = null;
@@ -309,3 +313,22 @@ fileInput.addEventListener('change', () => {
         await loadConversation(firstConv.dataset.id);
     }
 })();
+
+// ======================
+// Toggle da sidebar (abrir/fechar em mobile)
+// ======================
+if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+
+    // Fechar sidebar ao clicar fora (opcional, em mobile)
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768 && 
+            !sidebar.contains(e.target) && 
+            !sidebarToggle.contains(e.target) &&
+            sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open');
+        }
+    });
+}
