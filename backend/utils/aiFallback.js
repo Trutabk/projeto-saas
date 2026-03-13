@@ -4,7 +4,7 @@ const axios = require('axios');
 // ==================== MELHORIAS PROFISSIONAIS ====================
 // Importação de módulos nativos para melhor controle
 const { performance } = require('perf_hooks');
-const { AbortController } = require('abort-controller'); // ou global, dependendo da versão Node
+// AbortController é global em Node.js >= 15, não precisa importar
 
 // Configurações avançadas centralizadas
 const CONFIG = {
@@ -258,7 +258,8 @@ function extrairMetadadosBusca(responseData) {
 
 /**
  * Função auxiliar original para detectar se a mensagem do usuário parece exigir
- * informações atualizadas (tempo real, notícias, preços, etc.)
+ * informações atualizadas (tempo real, notícias, preços, etc.) 
+ * AGORA COM LISTA MASSIVA DE PALAVRAS-CHAVE
  */
 function precisaDeInfoAtual(messages) {
   if (!messages || messages.length === 0) return false;
@@ -269,10 +270,162 @@ function precisaDeInfoAtual(messages) {
     : JSON.stringify(ultimaMensagem.content).toLowerCase();
 
   const palavrasChave = [
-    'último', 'última', 'recente', 'atual', 'hoje', 'agora',
-    'notícia', 'preço', 'cotação', 'tempo', 'clima',
-    'resultado', 'jogo', 'partida', 'lançamento',
-    'buscar', 'pesquisar', 'google', 'internet', 'web'
+    // ==================== TEMPO E ATUALIDADE ====================
+    'último', 'última', 'últimos', 'últimas', 'recente', 'recentes', 
+    'atual', 'atuais', 'hoje', 'agora', 'agorinha', 'agora mesmo',
+    'neste momento', 'momento', 'já', 'já já', 'imediatamente',
+    'recém', 'recém-lançado', 'recém-publicado', 'fresco', 'novo',
+    'nova', 'novos', 'novas', 'novidade', 'novidades', 'lançamento',
+    'lançamentos', 'estreia', 'estreias', 'próximo', 'próxima',
+    'próximos', 'próximas', 'futuro', 'futura', 'futuros', 'futuras',
+    'hoje mesmo', 'amanhã', 'ontem', 'esta semana', 'essa semana',
+    'este mês', 'esse mês', 'este ano', 'esse ano',
+
+    // ==================== NOTÍCIAS E INFORMAÇÃO ====================
+    'notícia', 'notícias', 'últimas notícias', 'manchete', 'manchetes',
+    'jornal', 'jornal hoje', 'g1', 'globo', 'cnn', 'bbc', 'folha',
+    'estadão', 'uol', 'r7', 'yahoo', 'google notícias', 'informação',
+    'informações', 'reportagem', 'reportagens', 'matéria', 'matérias',
+    'cobertura', 'ao vivo', 'live', 'breaking', 'urgente', 'emergência',
+
+    // ==================== FINANÇAS E ECONOMIA ====================
+    'preço', 'preços', 'cotação', 'cotações', 'valor', 'valores',
+    'dólar', 'euro', 'libra', 'iene', 'yuan', 'peso', 'moeda', 'moedas',
+    'bitcoin', 'btc', 'ethereum', 'eth', 'litecoin', 'ltc', 'xrp',
+    'cardano', 'ada', 'solana', 'sol', 'dogecoin', 'doge', 'criptomoeda',
+    'criptomoedas', 'crypto', 'altcoin', 'blockchain', 'defi', 'nft',
+    'bolsa', 'bolsas', 'ibovespa', 'ibov', 's&p500', 'sp500', 'nasdaq',
+    'dow jones', 'nyse', 'nasdaq composite', 'ftse', 'nikkei', 'hang seng',
+    'commodities', 'ouro', 'prata', 'petróleo', 'brent', 'wti', 'soja',
+    'milho', 'café', 'açúcar', 'minério de ferro', 'índice', 'índices',
+    'inflação', 'ipca', 'igpm', 'pib', 'crescimento', 'recessão',
+    'desemprego', 'selic', 'cdi', 'taxa de juros', 'fed', 'federal reserve',
+    'bcb', 'banco central', 'investimento', 'investimentos', 'ação', 'ações',
+    'stock', 'stocks', 'fii', 'fiis', 'renda fixa', 'renda variável',
+    'tesouro direto', 'cdb', 'lci', 'lca', 'poupança', 'poupanca',
+
+    // ==================== CLIMA E TEMPO ====================
+    'tempo', 'clima', 'previsão', 'previsões', 'temperatura', 'máxima',
+    'mínima', 'sensação térmica', 'umidade', 'vento', 'ventos',
+    'chuva', 'chuvas', 'garoa', 'pancada', 'temporal', 'tempestade',
+    'ciclone', 'furacão', 'tufão', 'furação', 'enchente', 'enchentes',
+    'alagamento', 'alagamentos', 'deslizamento', 'deslizamentos',
+    'nevoeiro', 'neblina', 'neve', 'geada', 'granizo', 'calor', 'frio',
+    'onda de calor', 'onda de frio', 'inverno', 'verão', 'outono', 'primavera',
+    'sol', 'nublado', 'encoberto', 'aberto', 'rajada', 'meteorologia',
+    'meteoro', 'climatempo', 'accuweather', 'weather', 'forecast',
+
+    // ==================== ESPORTES ====================
+    'jogo', 'jogos', 'partida', 'partidas', 'resultado', 'resultados',
+    'placar', 'placares', 'gol', 'gols', 'cartão', 'cartões', 'expulsão',
+    'expulsões', 'campeonato', 'campeonatos', 'torneio', 'torneios',
+    'copa', 'copas', 'mundial', 'libertadores', 'sul-americana',
+    'brasileirão', 'serie a', 'serie b', 'premier league', 'la liga',
+    'liga das nações', 'champions league', 'europa league', 'futebol',
+    'basquete', 'nba', 'vôlei', 'volei', 'superliga', 'tênis', 'tenis',
+    'grand slam', 'australian open', 'roland garros', 'wimbledon', 'us open',
+    'fórmula 1', 'f1', 'gp', 'moto gp', 'motogp', 'indy', 'nascar',
+    'olimpíadas', 'olimpiadas', 'paralimpíadas', 'jogos olímpicos',
+    'jogos paraolímpicos', 'atletismo', 'natação', 'ginástica', 'judô',
+    'boxe', 'mma', 'ufc', 'wwe', 'ciclismo', 'skate', 'surfe', 'waves',
+
+    // ==================== TECNOLOGIA ====================
+    'lançamento', 'lançamentos', 'smartphone', 'celular', 'iphone',
+    'android', 'samsung', 'xiaomi', 'motorola', 'apple', 'google pixel',
+    'tablet', 'notebook', 'laptop', 'pc', 'computador', 'hardware',
+    'software', 'app', 'aplicativo', 'aplicativos', 'atualização',
+    'atualizações', 'update', 'updates', 'versão', 'versões', 'beta',
+    'ios', 'ipad os', 'mac os', 'watch os', 'tv os', 'windows', 'linux',
+    'ubuntu', 'processador', 'cpu', 'placa de vídeo', 'gpu', 'memória',
+    'ram', 'ssd', 'hd', 'armazenamento', 'bateria', 'câmera', 'foto',
+    'vídeo', 'gravação', 'tela', 'display', 'resolução', '4k', '8k',
+    'inteligência artificial', 'ia', 'machine learning', 'chatgpt',
+    'openai', 'gemini', 'copilot', 'assistente', 'robot', 'robô',
+    'drones', '5g', 'wi-fi', 'bluetooth', 'nfc', 'realidade virtual',
+    'realidade aumentada', 'vr', 'ar', 'metaverso', 'criptografia',
+
+    // ==================== ENTRETENIMENTO E CULTURA ====================
+    'filme', 'filmes', 'série', 'séries', 'novela', 'novelas', 'dorama',
+    'k-drama', 'anime', 'animes', 'desenho', 'desenhos', 'animação',
+    'streaming', 'netflix', 'prime video', 'disney+', 'hbo', 'max',
+    'globoplay', 'apple tv+', 'paramount+', 'star+', 'crunchyroll',
+    'artista', 'ator', 'atriz', 'atores', 'atrizes', 'cantor', 'cantora',
+    'cantores', 'banda', 'bandas', 'show', 'shows', 'turnê', 'tour',
+    'álbum', 'álbuns', 'música', 'músicas', 'hit', 'sucesso', 'famoso',
+    'famosos', 'celebridade', 'celebridades', 'instagram', 'tiktok',
+    'youtube', 'twitter', 'x', 'facebook', 'influenciador', 'digital',
+    'game', 'games', 'videogame', 'playstation', 'xbox', 'nintendo',
+    'lançamento de jogo', 'dlc', 'expansão', 'remaster', 'remake',
+
+    // ==================== POLÍTICA E GOVERNO ====================
+    'política', 'político', 'políticos', 'governo', 'governos',
+    'presidente', 'governador', 'governadora', 'prefeito', 'prefeita',
+    'senador', 'senadora', 'deputado', 'deputada', 'vereador', 'vereadora',
+    'ministro', 'ministra', 'secretário', 'secretária', 'eleição',
+    'eleições', 'votação', 'voto', 'urnas', 'candidato', 'candidata',
+    'campanha', 'partido', 'partidos', 'congresso', 'senado', 'câmara',
+    'câmara dos deputados', 'planalto', 'alvorada', 'supremo', 'stf',
+    'tse', 'lei', 'leis', 'decreto', 'decretos', 'medida provisória',
+    'mp', 'projeto de lei', 'pl', 'emenda', 'constituição', 'orçamento',
+    'gastos', 'receita', 'imposto', 'impostos', 'taxa', 'taxas', 'tarifa',
+    'tarifas', 'reforma', 'reformas', 'privatização', 'privatizações',
+
+    // ==================== SAÚDE ====================
+    'saúde', 'doença', 'doenças', 'epidemia', 'pandemia', 'covid',
+    'coronavírus', 'covid-19', 'sars-cov-2', 'vírus', 'bactéria',
+    'infecção', 'infecções', 'sintoma', 'sintomas', 'tratamento',
+    'tratamentos', 'remédio', 'remédios', 'medicamento', 'medicamentos',
+    'vacina', 'vacinas', 'vacinação', 'dose', 'doses', 'reforço',
+    'imunização', 'imunidade', 'hospital', 'hospitais', 'uti', 'leito',
+    'leitos', 'médico', 'médicos', 'enfermeiro', 'enfermeiros',
+    'sus', 'ministério da saúde', 'ans', 'anvisa', 'fioCruz',
+    'butantan', 'vacina da gripe', 'influenza', 'h1n1', 'dengue',
+    'zika', 'chikungunya', 'febre amarela', 'sarampo', 'câncer', 'cancer',
+    'diabetes', 'hipertensão', 'coração', 'infarto', 'avc', 'derrame',
+
+    // ==================== TRÂNSITO E TRANSPORTE ====================
+    'trânsito', 'transito', 'engarrafamento', 'congestionamento',
+    'acidente', 'acidentes', 'colisão', 'batida', 'capotamento',
+    'atropelamento', 'via', 'vias', 'estrada', 'estradas', 'rodovia',
+    'rodovias', 'ferrovia', 'ferrovias', 'metrô', 'metro', 'trem', 'trens',
+    'ônibus', 'onibus', 'carro', 'carros', 'moto', 'motos', 'bicicleta',
+    'bike', 'transporte público', 'mobilidade', 'tarifa', 'tarifas',
+    'passagem', 'passagens', 'bilhete', 'bilhetes', 'uber', '99',
+    'cabify', 'aplicativo de transporte', 'gasolina', 'etanol', 'diesel',
+    'álcool', 'combustível', 'combustíveis', 'posto', 'postos',
+
+    // ==================== MEIO AMBIENTE ====================
+    'meio ambiente', 'natureza', 'ecologia', 'sustentabilidade',
+    'reciclagem', 'lixo', 'poluição', 'poluicao', 'desmatamento',
+    'queimada', 'queimadas', 'incêndio', 'incêndios', 'desastre ambiental',
+    'ecossistema', 'fauna', 'flora', 'animais', 'extinção', 'preservação',
+    'carbono', 'co2', 'efeito estufa', 'aquecimento global', 'mudanças climáticas',
+    'climáticas', 'protocolo de kyoto', 'acordo de paris', 'cop30',
+
+    // ==================== EXPRESSÕES DE PESQUISA ====================
+    'buscar', 'pesquisar', 'procure', 'procurar', 'quero saber',
+    'gostaria de saber', 'preciso saber', 'me diga', 'diga-me',
+    'conte-me', 'informe', 'explique', 'o que é', 'quem é', 'quem são',
+    'qual é', 'quais são', 'onde fica', 'onde encontrar', 'como fazer',
+    'como funciona', 'por que', 'porque', 'qual o motivo', 'qual a razão',
+    'que dia', 'que horas', 'quando', 'desde quando', 'até quando',
+    'o que aconteceu', 'o que está acontecendo', 'o que houve',
+    'o que há de novo', 'últimas', 'último', 'recém', 'novidades',
+    'fiquei sabendo', 'ouvi dizer', 'li que', 'vi que',
+
+    // ==================== TERMOS EM INGLÊS (para queries mistas) ====================
+    'last', 'latest', 'recent', 'current', 'today', 'now', 'right now',
+    'news', 'breaking', 'headline', 'update', 'updates', 'report',
+    'price', 'prices', 'quote', 'quotes', 'stock', 'stocks', 'market',
+    'dollar', 'euro', 'pound', 'yen', 'bitcoin', 'crypto', 'cryptocurrency',
+    'weather', 'forecast', 'rain', 'storm', 'hurricane', 'temperature',
+    'game', 'games', 'match', 'score', 'result', 'championship',
+    'movie', 'movies', 'series', 'tv show', 'release', 'premiere',
+    'celebrity', 'actor', 'actress', 'singer', 'song', 'album',
+    'election', 'vote', 'president', 'government', 'policy', 'law',
+    'health', 'disease', 'vaccine', 'covid', 'pandemic', 'treatment',
+    'traffic', 'accident', 'road', 'highway', 'transit', 'bus', 'train',
+    'search', 'google', 'internet', 'web', 'online', 'find', 'look up'
   ];
   return palavrasChave.some(palavra => texto.includes(palavra));
 }
