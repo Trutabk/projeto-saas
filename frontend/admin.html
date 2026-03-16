@@ -6,7 +6,10 @@
     <title>Admin - SaaS AI</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/admin.css">
+    <!-- Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome para ícones (opcional, mas recomendado) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <nav class="navbar">
@@ -15,6 +18,9 @@
             <li><a href="#stats">Estatísticas</a></li>
             <li><a href="#users">Usuários</a></li>
             <li><a href="#transactions">Transações</a></li>
+            <li><a href="#messages">Mensagens</a></li>
+            <li><a href="#logs">Logs</a></li>
+            <li><a href="#config">Configurações</a></li>
             <li><a href="#" id="logoutBtn">Sair</a></li>
         </ul>
         <div class="hamburger">☰</div>
@@ -23,39 +29,94 @@
     <main class="admin">
         <h1>Painel Administrativo</h1>
 
+        <!-- Seção de Estatísticas Aprimorada -->
         <section id="stats">
             <h2>Visão Geral</h2>
             <div class="stats-cards">
                 <div class="stat-card">
-                    <h3>Usuários</h3>
+                    <i class="fas fa-users"></i>
+                    <h3>Usuários Totais</h3>
                     <p id="totalUsers">0</p>
                 </div>
                 <div class="stat-card">
+                    <i class="fas fa-user-check"></i>
+                    <h3>Usuários Ativos (hoje)</h3>
+                    <p id="activeToday">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-comments"></i>
+                    <h3>Mensagens Hoje</h3>
+                    <p id="messagesToday">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-line"></i>
                     <h3>Transações</h3>
                     <p id="totalTransactions">0</p>
                 </div>
                 <div class="stat-card">
+                    <i class="fas fa-dollar-sign"></i>
                     <h3>Receita Total</h3>
                     <p id="totalRevenue">R$ 0,00</p>
                 </div>
+                <div class="stat-card">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Planos Ativos</h3>
+                    <p id="activePlans">0</p>
+                </div>
             </div>
-            <canvas id="revenueChart" width="400" height="200"></canvas>
+
+            <!-- Gráficos lado a lado -->
+            <div class="charts-row">
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="plansChart"></canvas>
+                </div>
+            </div>
+            <div class="charts-row">
+                <div class="chart-container">
+                    <canvas id="messagesChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="usersGrowthChart"></canvas>
+                </div>
+            </div>
         </section>
 
+        <!-- Seção de Usuários com Detalhes e Ações -->
         <section id="users">
             <h2>Usuários</h2>
-            <table id="usersTable">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Plano</th>
-                        <th>Data Cadastro</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="users-toolbar">
+                <input type="text" id="searchUser" placeholder="Buscar por nome ou email...">
+                <select id="filterPlan">
+                    <option value="">Todos os planos</option>
+                    <option value="free">Gratuito</option>
+                    <option value="basic">Básico</option>
+                    <option value="pro">Profissional</option>
+                    <option value="enterprise">Empresarial</option>
+                </select>
+                <button id="exportUsers">Exportar CSV</button>
+            </div>
+            <div class="table-responsive">
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Plano</th>
+                            <th>Status</th>
+                            <th>Expiração</th>
+                            <th>Mensagens</th>
+                            <th>Último acesso</th>
+                            <th>Cadastro</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
             <div class="pagination">
                 <button id="prevUsers">Anterior</button>
                 <span id="pageUsers">1</span>
@@ -63,22 +124,151 @@
             </div>
         </section>
 
+        <!-- Seção de Transações com mais detalhes -->
         <section id="transactions">
-            <h2>Transações Recentes</h2>
-            <table id="transactionsTable">
-                <thead>
-                    <tr>
-                        <th>Usuário</th>
-                        <th>Plano</th>
-                        <th>Valor</th>
-                        <th>Status</th>
-                        <th>Data</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <h2>Transações</h2>
+            <div class="transactions-toolbar">
+                <input type="text" id="searchTransaction" placeholder="Buscar por usuário...">
+                <select id="filterStatus">
+                    <option value="">Todos os status</option>
+                    <option value="approved">Aprovado</option>
+                    <option value="pending">Pendente</option>
+                    <option value="refunded">Reembolsado</option>
+                </select>
+                <button id="exportTransactions">Exportar CSV</button>
+            </div>
+            <div class="table-responsive">
+                <table id="transactionsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuário</th>
+                            <th>Plano</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                            <th>Método</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="pagination">
+                <button id="prevTransactions">Anterior</button>
+                <span id="pageTransactions">1</span>
+                <button id="nextTransactions">Próximo</button>
+            </div>
+        </section>
+
+        <!-- Seção de Mensagens / Conversas -->
+        <section id="messages">
+            <h2>Mensagens Recentes</h2>
+            <div class="table-responsive">
+                <table id="messagesTable">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Mensagem</th>
+                            <th>Resposta da IA</th>
+                            <th>Data/Hora</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Seção de Logs de Atividades -->
+        <section id="logs">
+            <h2>Logs de Atividades</h2>
+            <div class="logs-toolbar">
+                <input type="text" id="searchLog" placeholder="Buscar...">
+                <select id="filterLogType">
+                    <option value="">Todos os tipos</option>
+                    <option value="login">Login</option>
+                    <option value="logout">Logout</option>
+                    <option value="payment">Pagamento</option>
+                    <option value="message">Mensagem</option>
+                </select>
+            </div>
+            <div class="table-responsive">
+                <table id="logsTable">
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Usuário</th>
+                            <th>Ação</th>
+                            <th>Detalhes</th>
+                            <th>IP</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Seção de Configurações do Sistema (opcional) -->
+        <section id="config">
+            <h2>Configurações do Sistema</h2>
+            <div class="config-grid">
+                <div class="config-card">
+                    <h3>Limite de Mensagens Grátis</h3>
+                    <input type="number" id="freeLimit" value="20">
+                    <button id="saveFreeLimit">Salvar</button>
+                </div>
+                <div class="config-card">
+                    <h3>Preços dos Planos</h3>
+                    <label>Básico: R$ <input type="number" id="priceBasic" value="29.90"></label>
+                    <label>Pro: R$ <input type="number" id="pricePro" value="79.90"></label>
+                    <label>Empresarial: R$ <input type="number" id="priceEnterprise" value="199.90"></label>
+                    <button id="savePrices">Salvar</button>
+                </div>
+                <div class="config-card">
+                    <h3>Modo de Manutenção</h3>
+                    <label><input type="checkbox" id="maintenanceMode"> Ativar</label>
+                </div>
+            </div>
         </section>
     </main>
+
+    <!-- Modal de Detalhes do Usuário (oculto inicialmente) -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Detalhes do Usuário</h2>
+            <div id="userDetails"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Usuário -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Usuário</h2>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId">
+                <label>Nome: <input type="text" id="editName"></label>
+                <label>Email: <input type="email" id="editEmail"></label>
+                <label>Plano: 
+                    <select id="editPlan">
+                        <option value="free">Gratuito</option>
+                        <option value="basic">Básico</option>
+                        <option value="pro">Pro</option>
+                        <option value="enterprise">Empresarial</option>
+                    </select>
+                </label>
+                <label>Status: 
+                    <select id="editStatus">
+                        <option value="active">Ativo</option>
+                        <option value="suspended">Suspenso</option>
+                        <option value="inactive">Inativo</option>
+                    </select>
+                </label>
+                <button type="submit">Salvar</button>
+            </form>
+        </div>
+    </div>
 
     <script type="module" src="js/api.js"></script>
     <script type="module" src="js/auth.js"></script>

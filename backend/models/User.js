@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   phone: { type: String },
   isVerified: { type: Boolean, default: false },
+  isAdmin: { type: Boolean, default: false }, // ← ADICIONADO
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   // Plano do usuário
   plan: {

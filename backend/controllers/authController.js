@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Log = require('../models/Log'); // ← ADICIONADO
 const generateToken = require('../utils/generateToken');
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
@@ -44,6 +45,9 @@ exports.login = async (req, res, next) => {
       const token = generateToken(user._id);
       user.tokens.push({ token });
       await user.save();
+
+      // Criar log de login
+      await Log.create({ user: user._id, action: 'login', ip: req.ip });
 
       res.json({
         _id: user._id,
@@ -103,7 +107,7 @@ exports.forgotPassword = async (req, res, next) => {
         <title>Redefinir Senha</title>
         <style>
           body { font-family: 'Inter', Arial, sans-serif; background: #0a0a1a; color: #fff; padding: 20px; }
-          .container { max-width: 500px; margin: 0 auto; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; }
+          .container { max-width: 500px; margin: 0 auto; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 30px; }
           h2 { color: #a5b1ff; margin-bottom: 20px; }
           p { color: #ccc; line-height: 1.6; }
           .button { display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 50px; margin: 20px 0; }
@@ -127,7 +131,7 @@ exports.forgotPassword = async (req, res, next) => {
     `;
 
     // Versão em texto plano (fallback)
-    const textContent = `Olá ${user.name},\n\nRecebemos uma solicitação para redefinir a senha da sua conta no SaaS AI. Acesse o link abaixo para criar uma nova senha. Este link é válido por 10 minutos:\n\n${resetUrl}\n\nSe você não solicitou esta alteração, ignore este e-mail.\n\nAtenciosamente,\nEquipe SaaS AI`;
+    const textContent = `Olá ${user.name},\n\nRecebemos uma solicitação para redefinir a senha da sua conta no SaaS AI. Acesse o link abaixo para criar uma nova senha: ${resetUrl}\n\nSe você não solicitou, ignore este e-mail.\n\nAtenciosamente,\nEquipe SaaS AI`;
 
     try {
       await sendEmail({

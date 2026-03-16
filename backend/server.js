@@ -28,6 +28,15 @@ const connectDB = require('./config/db');
 const jwtAuth = require('./middleware/jwtAuth');
 const errorMiddleware = require('./middleware/errorMiddleware');
 
+// =======================
+// Importação das rotas
+// =======================
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+
 dotenv.config();
 
 // =======================
@@ -116,11 +125,11 @@ app.use('/api', jwtAuth);
 // =======================
 // Rotas da API
 // =======================
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/user', require('./routes/userRoutes'));
-app.use('/api/payments', require('./routes/paymentRoutes'));
-app.use('/api/admin', require('./routes/adminRoutes'));
-app.use('/api/chat', require('./routes/chatRoutes'));
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/chat', chatRoutes);
 
 // =======================
 // Middleware de erro global

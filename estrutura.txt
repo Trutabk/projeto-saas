@@ -1,0 +1,267 @@
+.
+├── README.md
+├── backend
+│   ├── config
+│   │   ├── db.js
+│   │   ├── limits.js
+│   │   └── mercadopago.js
+│   ├── controllers
+│   │   ├── adminController.js
+│   │   ├── authController.js
+│   │   ├── chatController.js
+│   │   ├── paymentController.js
+│   │   └── userController.js
+│   ├── middleware
+│   │   ├── adminMiddleware.js
+│   │   ├── authMiddleware.js
+│   │   ├── errorMiddleware.js
+│   │   ├── jwtAuth.js
+│   │   └── uploadMiddleware.js
+│   ├── models
+│   │   ├── Chat.js
+│   │   ├── Conversation.js
+│   │   ├── File.js
+│   │   ├── Plan.js
+│   │   ├── Transaction.js
+│   │   └── User.js
+│   ├── node_modules
+│   │   ├── @mongodb-js
+│   │   ├── @types
+│   │   ├── accepts
+│   │   ├── anymatch
+│   │   ├── append-field
+│   │   ├── array-flatten
+│   │   ├── asynckit
+│   │   ├── axios
+│   │   ├── balanced-match
+│   │   ├── basic-auth
+│   │   ├── bcryptjs
+│   │   ├── binary-extensions
+│   │   ├── body-parser
+│   │   ├── brace-expansion
+│   │   ├── braces
+│   │   ├── bson
+│   │   ├── buffer-equal-constant-time
+│   │   ├── buffer-from
+│   │   ├── busboy
+│   │   ├── bytes
+│   │   ├── call-bind-apply-helpers
+│   │   ├── call-bound
+│   │   ├── chokidar
+│   │   ├── combined-stream
+│   │   ├── compressible
+│   │   ├── compression
+│   │   ├── concat-stream
+│   │   ├── content-disposition
+│   │   ├── content-type
+│   │   ├── cookie
+│   │   ├── cookie-signature
+│   │   ├── core-util-is
+│   │   ├── cors
+│   │   ├── debug
+│   │   ├── delayed-stream
+│   │   ├── depd
+│   │   ├── destroy
+│   │   ├── dotenv
+│   │   ├── dunder-proto
+│   │   ├── ecdsa-sig-formatter
+│   │   ├── ee-first
+│   │   ├── encodeurl
+│   │   ├── es-define-property
+│   │   ├── es-errors
+│   │   ├── es-object-atoms
+│   │   ├── es-set-tostringtag
+│   │   ├── escape-html
+│   │   ├── etag
+│   │   ├── express
+│   │   ├── express-rate-limit
+│   │   ├── express-validator
+│   │   ├── fill-range
+│   │   ├── finalhandler
+│   │   ├── follow-redirects
+│   │   ├── form-data
+│   │   ├── forwarded
+│   │   ├── fresh
+│   │   ├── function-bind
+│   │   ├── get-intrinsic
+│   │   ├── get-proto
+│   │   ├── glob-parent
+│   │   ├── gopd
+│   │   ├── has-flag
+│   │   ├── has-symbols
+│   │   ├── has-tostringtag
+│   │   ├── hasown
+│   │   ├── helmet
+│   │   ├── http-errors
+│   │   ├── iconv-lite
+│   │   ├── ignore-by-default
+│   │   ├── inherits
+│   │   ├── ip-address
+│   │   ├── ipaddr.js
+│   │   ├── is-binary-path
+│   │   ├── is-extglob
+│   │   ├── is-glob
+│   │   ├── is-number
+│   │   ├── isarray
+│   │   ├── jsonwebtoken
+│   │   ├── jwa
+│   │   ├── jws
+│   │   ├── kareem
+│   │   ├── lodash
+│   │   ├── lodash.includes
+│   │   ├── lodash.isboolean
+│   │   ├── lodash.isinteger
+│   │   ├── lodash.isnumber
+│   │   ├── lodash.isplainobject
+│   │   ├── lodash.isstring
+│   │   ├── lodash.once
+│   │   ├── mailtrap
+│   │   ├── math-intrinsics
+│   │   ├── media-typer
+│   │   ├── memory-pager
+│   │   ├── mercadopago
+│   │   ├── merge-descriptors
+│   │   ├── methods
+│   │   ├── mime
+│   │   ├── mime-db
+│   │   ├── mime-types
+│   │   ├── minimatch
+│   │   ├── minimist
+│   │   ├── mkdirp
+│   │   ├── mongodb
+│   │   ├── mongodb-connection-string-url
+│   │   ├── mongoose
+│   │   ├── morgan
+│   │   ├── mpath
+│   │   ├── mquery
+│   │   ├── ms
+│   │   ├── multer
+│   │   ├── negotiator
+│   │   ├── node-fetch
+│   │   ├── nodemailer
+│   │   ├── nodemon
+│   │   ├── normalize-path
+│   │   ├── object-assign
+│   │   ├── object-inspect
+│   │   ├── on-finished
+│   │   ├── on-headers
+│   │   ├── parseurl
+│   │   ├── path-to-regexp
+│   │   ├── picomatch
+│   │   ├── process-nextick-args
+│   │   ├── proxy-addr
+│   │   ├── proxy-from-env
+│   │   ├── pstree.remy
+│   │   ├── punycode
+│   │   ├── qs
+│   │   ├── range-parser
+│   │   ├── raw-body
+│   │   ├── readable-stream
+│   │   ├── readdirp
+│   │   ├── safe-buffer
+│   │   ├── safer-buffer
+│   │   ├── semver
+│   │   ├── send
+│   │   ├── serpapi
+│   │   ├── serve-static
+│   │   ├── setprototypeof
+│   │   ├── side-channel
+│   │   ├── side-channel-list
+│   │   ├── side-channel-map
+│   │   ├── side-channel-weakmap
+│   │   ├── sift
+│   │   ├── simple-update-notifier
+│   │   ├── smart-buffer
+│   │   ├── socks
+│   │   ├── sparse-bitfield
+│   │   ├── statuses
+│   │   ├── streamsearch
+│   │   ├── string_decoder
+│   │   ├── supports-color
+│   │   ├── to-regex-range
+│   │   ├── toidentifier
+│   │   ├── touch
+│   │   ├── tr46
+│   │   ├── type-is
+│   │   ├── typedarray
+│   │   ├── undefsafe
+│   │   ├── undici-types
+│   │   ├── unpipe
+│   │   ├── util-deprecate
+│   │   ├── utils-merge
+│   │   ├── uuid
+│   │   ├── validator
+│   │   ├── vary
+│   │   ├── webidl-conversions
+│   │   ├── whatwg-url
+│   │   └── xtend
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── providers
+│   │   ├── gemini.js
+│   │   ├── groq.js
+│   │   ├── index.js
+│   │   └── openrouter.js
+│   ├── routes
+│   │   ├── adminRoutes.js
+│   │   ├── authRoutes.js
+│   │   ├── chatRoutes.js
+│   │   ├── paymentRoutes.js
+│   │   └── userRoutes.js
+│   ├── server.js
+│   └── utils
+│       ├── aiFallback.js
+│       ├── emailService.js
+│       ├── generateToken.js
+│       ├── sendEmail.js
+│       ├── taskDetector.js
+│       ├── validators.js
+│       └── webSearch.js
+├── estrutura.txt
+├── frontend
+│   ├── admin.html
+│   ├── assets
+│   │   ├── images
+│   │   └── uploads
+│   ├── chat.html
+│   ├── css
+│   │   ├── animations.css
+│   │   ├── auth.css
+│   │   ├── chat.css
+│   │   ├── dashboard.css
+│   │   ├── hero.css
+│   │   ├── modal.css
+│   │   ├── plans.css
+│   │   ├── responsive.css
+│   │   └── style.css
+│   ├── dashboard.html
+│   ├── forgot-password.html
+│   ├── index.html
+│   ├── js
+│   │   ├── admin.js
+│   │   ├── api.js
+│   │   ├── auth.js
+│   │   ├── chat.js
+│   │   ├── dashboard.js
+│   │   └── payment.js
+│   ├── login.html
+│   ├── perfil.html
+│   ├── planos.html
+│   ├── privacidade.html
+│   ├── register.html
+│   ├── reset-password.html
+│   └── termos.html
+├── node_modules
+│   └── nodemailer
+│       ├── CHANGELOG.md
+│       ├── CODE_OF_CONDUCT.md
+│       ├── LICENSE
+│       ├── README.md
+│       ├── SECURITY.txt
+│       ├── eslint.config.js
+│       ├── lib
+│       └── package.json
+├── package-lock.json
+└── package.json
+
+189 directories, 76 files
